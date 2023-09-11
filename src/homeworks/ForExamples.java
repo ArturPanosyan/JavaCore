@@ -21,7 +21,6 @@ public class ForExamples {
             }
             System.out.println();
             System.out.println();
-            System.out.println();
 
             //3
             int[] array = {2, 5, 8, 4, 9, 3, 7};
