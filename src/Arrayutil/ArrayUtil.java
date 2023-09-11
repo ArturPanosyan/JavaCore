@@ -1,31 +1,34 @@
-package homeworks;
+package Arrayutil;
 
 public class ArrayUtil {
 
-    public static void main(String[] args) {
-        int[] numbers = {1, 6, 3, 9, 15, 52, -3, 5, 8};
+    int[] numbers = {1, 6, 3, 9, 15, 52, -3, 5, 8};
 
-        // 1.
+    void arrayOne() {
         for (int num : numbers) {
             System.out.print(num + " ");
         }
         System.out.println();
-        System.out.println();
 
-        // 2.
+    }
+
+    void arrayTwo() {
         System.out.println("Первый элемент: " + numbers[0]);
-        System.out.println();
 
+    }
 
-        // 3.
+    void arrayThree() {
         System.out.println("Последний элемент: " + numbers[numbers.length - 1]);
-        System.out.println();
 
-        // 4.
+    }
+
+    void arrayFour() {
         System.out.println("Длина массива: " + numbers.length);
-        System.out.println();
 
-        // 5.
+    }
+
+
+    void arrayFive() {
         int min = numbers[0];
         for (int num : numbers) {
             if (num < min) {
@@ -33,10 +36,11 @@ public class ArrayUtil {
             }
         }
         System.out.println("Самое маленькое число: " + min);
-        System.out.println();
+
+    }
 
 
-        // 6.
+    void array6() {
         if (numbers.length < 3) {
             System.out.println("Can't print middle values");
         } else if (numbers.length % 2 == 0) {
@@ -44,10 +48,10 @@ public class ArrayUtil {
         } else {
             System.out.println("Среднее число: " + numbers[numbers.length / 2]);
         }
-        System.out.println();
 
+    }
 
-        // 7.
+    void array7() {
         int evenCount = 0;
         for (int num : numbers) {
             if (num % 2 == 0) {
@@ -55,28 +59,43 @@ public class ArrayUtil {
             }
         }
         System.out.println("Количество четных чисел: " + evenCount);
-        System.out.println();
+
+    }
 
 
-        // 8.
-        System.out.println("Количество нечетных чисел: " + (numbers.length - evenCount));
-        System.out.println();
+    void array8() {
+        int oddCount = 0;
+        for (int num : numbers) {
+            if (num % 2 != 0) {
+                oddCount++;
+            }
+        }
+        System.out.println("Количество нечетных чисел: " + oddCount);
 
-        // 9.
+    }
+
+
+    void array9() {
         int sum = 0;
         for (int num : numbers) {
             sum += num;
         }
         System.out.println("Сумма элементов: " + sum);
-        System.out.println();
-
-        // 10.
-        double average = (double) sum / numbers.length;
-        System.out.println("Среднее арифметическое: " + average);
-
-
+        System.out.println("Avg: " + (double) (sum / numbers.length));
     }
+
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
