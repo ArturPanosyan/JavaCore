@@ -20,12 +20,11 @@ public class BoxDemo3 {
 
         // вывести объем первого параллелепипеда myboxl.volume();
 
-        vol = myBox1.width * myBox1.height * myBox1.depth;
-        System.out.println(" Объем равен " + vol);
+        myBox1.volume();
+
 
         // вывести объем второго параллелепипеда mybox2. volume ();
 
-        vol = myBox2.width * myBox2.height * myBox2.depth;
-        System.out.println(" Объем равен " + vol);
+        myBox2.volume();
     }
 }
