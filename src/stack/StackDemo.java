@@ -1,4 +1,6 @@
-package chapter6;
+package stack;
+
+import stack.Stack;
 
 public class StackDemo {
     public static void main(String[] args) {

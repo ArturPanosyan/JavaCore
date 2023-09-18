@@ -1,8 +1,8 @@
-package chapter6;
+package stack;
 
 public class Stack {
     int[] stck = new int[10];
-    int tos;
+    int tos;   // top of the stack
 
     // инициализировать вершину стека
     Stack() {
