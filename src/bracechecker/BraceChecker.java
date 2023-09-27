@@ -26,9 +26,9 @@ public class BraceChecker {
                 case ']':
                 case ')':
                     if( !theStack.isEmpty()) {
-                        char chx = theStack.pop();
-                        if ((ch == '}' && chx != '}') || (ch == '[' && chx != ']')
-                                || (ch == '(' && chx != ')'))
+                        char ch1 = theStack.pop();
+                        if ((ch == '}' && ch1 != '}') || (ch == '[' && ch1 != ']')
+                                || (ch == '(' && ch1 != ')'))
                             System.err.println(" Error: opened [ but closed } at"
                                     + ch + " " + i);
                     } else
