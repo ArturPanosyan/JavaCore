@@ -1,30 +1,33 @@
 package bracechecker;
 
 public class Stack {
+  //  private  int stck[] = new int[10];
+  //  private int tos;
 
 
-    // инициализировать вершину стека
-    Stack() {
+  //  // инициализировать вершину стека
+   Stack() {
+   ////     tos = -1;
     }
 
 
 
     // разместить элемент в стеке
 
-  //  void push(int item) {
+   // void push(int item) {
     //    if (tos == 9)
-    //        System.out.println(" Cтeк заполнен. ");
-  //      else
-    //        stck[++tos] = item;
-  //  }
+   //         System.out.println(" Cтeк заполнен. ");
+    //  else
+    //       stck[++tos] = item;
+  // }
 
     // извлечь элемент из стека
-   /// int pop() {
-  //  /    if (tos < 0) {
-      //      System.out.println(" Cтeк не загружен. ");
-      //      return 0;
-     //   } else
-      //      return stck[tos--];
+  //  int pop() {
+     //   if (tos < 0) {
+        //    System.out.println(" Cтeк не загружен. ");
+      //     return 0;
+       // } else
+       //     return stck[tos--];
 
     private int maxSize;
 
@@ -46,9 +49,7 @@ public class Stack {
         return stackArray[top--];
     }
 
-    public char peek() {
-        return stackArray[top];
-    }
+
 
     public boolean isEmpty() {
         return (top == -1);

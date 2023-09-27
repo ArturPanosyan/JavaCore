@@ -6,9 +6,10 @@ public class BraceChecker {
 
     public BraceChecker(String text) {
 
-        this.text = "Hello (from) [java}" ;
+        this.text = "Hello (from) [java}";
     }
-      public void check() {
+
+    public void check() {
         int stackSize = text.length();
         Stack mystack = new Stack();
         Stack theStack = new Stack(stackSize);
@@ -28,24 +29,36 @@ public class BraceChecker {
                         char chx = theStack.pop();
                         if ((ch == '}' && chx != '}') || (ch == '[' && chx != ']')
                                 || (ch == '(' && chx != ')'))
-                            System.out.println(" Error: opened [ but closed } at"
+                            System.err.println(" Error: opened [ but closed } at"
                                     + ch + " " + i);
                     } else
-                        System.out.println(" Error: opened [ but closed } at"
+                        System.err.println(" Error: opened [ but closed } at"
                                 + ch + " " + i);
 
-                        break;
-                        default:
-                            break;
-                    }
-
-
+                    break;
+                default:
+                    break;
             }
-if(!theStack.isEmpty())
-    System.out.println(" Error: opened [ but closed } at");
+
 
         }
+        if(!theStack.isEmpty())
+            System.err.println(" Error: opened [ but closed } at");
+
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

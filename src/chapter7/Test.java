@@ -38,6 +38,20 @@ public class Test {
         return temp;
     }
 
+    int y;
+    public int c;
+    private int e;
+
+    // методы доступа к члену с данного класса
+    void setc (int i) {
+        e = i;
+    }
+    int getc() {
+        return e;
+
+    }
+
+
 }
 
 
