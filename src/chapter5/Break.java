@@ -17,4 +17,5 @@ public class Break {
             System.out.println("Этот оператор следует за блоком second.:");
         }
     }
+
 }
