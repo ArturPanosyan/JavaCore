@@ -1,71 +1,53 @@
 package bracechecker;
 
-public class BraceChecker {
+    public class BraceChecker {
+        private String text;
 
-    private String text;
+        public BraceChecker(String text) {
+            this.text = text;
+        }
 
-    public BraceChecker(String text) {
+        public void check() {
+            Stack stack = new Stack(text.length());
 
-        this.text = "Hello (from) [java}";
-    }
-
-    public void check() {
-        int stackSize = text.length();
-        Stack mystack = new Stack();
-        Stack theStack = new Stack(stackSize);
-
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            switch (ch) {
-                case '{':
-                case '[':
-                case '(':
-                    theStack.push(ch);
-                    break;
-                case '}':
-                case ']':
-                case ')':
-                    if( !theStack.isEmpty()) {
-                        char ch1 = theStack.pop();
-                        if ((ch == '}' && ch1 != '}') || (ch == '[' && ch1 != ']')
-                                || (ch == '(' && ch1 != ')'))
-                            System.err.println(" Error: opened [ but closed } at"
-                                    + ch + " " + i);
-                    } else
-                        System.err.println(" Error: opened [ but closed } at"
-                                + ch + " " + i);
-
-                    break;
-                default:
-                    break;
+            for (int i = 0; i < text.length(); i++) {
+                char ch = text.charAt(i);
+                switch (ch) {
+                    case '{':
+                    case '[':
+                    case '(':
+                        stack.push(ch);
+                        break;
+                    case '}':
+                        if (stack.isEmpty() || stack.pop() != '{') {
+                            System.out.println("Error: opened { but closed } at " + i);
+                            return;
+                        }
+                        break;
+                    case ']':
+                        if (stack.isEmpty() || stack.pop() != '[') {
+                            System.out.println("Error: opened [ but closed ] " + ch +
+                                    "at " + i);
+                            return;
+                        }
+                        break;
+                    case ')':
+                        if (stack.isEmpty() || stack.pop() != '(') {
+                            System.out.println("Error: opened ( but closed ) " + ch + " at " + i);
+                            return;
+                        }
+                        break;
+                }
             }
 
-
+            if (!stack.isEmpty()) {
+                char remainingBrace = stack.pop();
+                System.out.println("Error: opened " + remainingBrace + " but not closed");
+            } else {
+                System.out.println("No errors found.");
+            }
         }
-        if(!theStack.isEmpty())
-            System.err.println(" Error: opened [ but closed } at");
-
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
