@@ -28,7 +28,7 @@ public class VarArgs4 {
     public static void main(String[] args) {
         vaTest(1,2,3);
         vaTest(true, false, false);
-        vaTest( );   // Ошибка: неоднозначность!
+        vaTest( 1);   // Ошибка: неоднозначность!
     }
 
 

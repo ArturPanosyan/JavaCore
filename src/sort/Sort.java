@@ -12,6 +12,7 @@ public class Sort {
                     numbers[j - 1] = tmp;
                 }
 
+
             }
             
         }
