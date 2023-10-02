@@ -9,12 +9,12 @@ public class EmployeeDemo {
         EmployeeStorage employeeStorage = new EmployeeStorage();
         boolean isRun = true;
         while (isRun) {
-            System.out.println("PLEASE INPUT FOR 0 Exit");
-            System.out.println("PLEASE INPUT FOR 1 ADD EMPLOYEE");
-            System.out.println("PLEASE INPUT FOR 2 PRINT ALL EMPLOYEE");
-            System.out.println("PLEASE INPUT FOR 3 SEARCH EMPLOYEE BY EMPLOYEE ID");
-            System.out.println("PLEASE INPUT FOR 4 SEARCH EMPLOYEE BY COMPANY NAME");
-            System.out.println("PLEASE INPUT FOR 5 SEARCH EMPLOYEE PHONE");
+            System.err.println("PLEASE INPUT FOR 0 Exit");
+            System.err.println("PLEASE INPUT FOR 1 ADD EMPLOYEE");
+            System.err.println("PLEASE INPUT FOR 2 PRINT ALL EMPLOYEE");
+            System.err.println("PLEASE INPUT FOR 3 SEARCH EMPLOYEE BY EMPLOYEE ID");
+            System.err.println("PLEASE INPUT FOR 4 SEARCH EMPLOYEE BY COMPANY NAME");
+            System.err.println("PLEASE INPUT FOR 5 SEARCH EMPLOYEE PHONE");
             String command = scanner.nextLine();
             switch (command) {
                 case "0":
@@ -40,22 +40,22 @@ public class EmployeeDemo {
 
                     break;
                 case "2":
-                    System.out.println("--------------------");
+                    System.err.println("--------------------");
                     employeeStorage.print();
                     System.out.println("--------------------");
                     break;
                 case "3":
-                    System.out.println("Please input EmployeeID");
+                    System.err.println("Please input EmployeeID");
                     String keyword = scanner.nextLine();
                     employeeStorage.search(keyword);
                     break;
                 case "4":
-                    System.out.println("Please input Company Name");
+                    System.err.println("Please input Company Name");
                     keyword = scanner.nextLine();
                     employeeStorage.search(keyword);
                     break;
                 default:
-                    System.out.println(" Invalid command: Try again! ");
+                    System.err.println(" Invalid command: Try again! ");
 
 
             }
