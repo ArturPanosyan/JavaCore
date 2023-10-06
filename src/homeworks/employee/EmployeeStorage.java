@@ -1,7 +1,5 @@
 package homeworks.employee;
 
-import classwork.classwork.library.Book;
-
 public class EmployeeStorage {
     private Employee[] employees = new Employee[50];
     private int size;
@@ -15,30 +13,24 @@ public class EmployeeStorage {
 
     public void print() {
         for (int i = 0; i < size; i++) {
-            System.out.println(employees[i].getName() + " " + employees[i].getSurname() + " "
-                    + employees[i].getEmployeeID() + " " + employees[i].getPhone() + " " +
-                    employees[i].getCompany() + " " + employees[i].getPosition());
-
-
+            System.out.println(employees[i]);
         }
     }
 
     public void searchByID(String keywordID) {
         for (int i = 0; i < size; i++) {
             if (employees[i].getEmployeeID().contains(keywordID)) ;
-            System.out.println(employees[i].getName() + " " + employees[i].getSurname() + " "
-                    + employees[i].getEmployeeID() + " " + employees[i].getPhone() + " " +
-                    employees[i].getCompany() + " " + employees[i].getPosition());
+            System.out.println(employees[i]);
         }
 
     }
 
+
+
     public void searchByCompany(String keywordByCompany) {
         for (int i = 0; i < size; i++) {
             if (employees[i].getCompany().contains(keywordByCompany)) ;
-            System.out.println(employees[i].getName() + " " + employees[i].getSurname() + " "
-                    + employees[i].getEmployeeID() + " " + employees[i].getPhone() + " " +
-                    employees[i].getCompany() + " " + employees[i].getPosition());
+            System.out.println(employees[i]);
         }
 
     }

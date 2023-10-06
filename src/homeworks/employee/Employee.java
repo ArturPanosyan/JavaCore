@@ -10,7 +10,6 @@ public class Employee {
     private String position;
 
 
-
     public Employee(String name, String surname, String employeeID, double salary, double phone, String company, String position) {
         this.name = name;
         this.surname = surname;
@@ -78,5 +77,18 @@ public class Employee {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", employeeID='" + employeeID + '\'' +
+                ", salary=" + salary +
+                ", phone=" + phone +
+                ", company='" + company + '\'' +
+                ", position='" + position + '\'' +
+                '}';
     }
 }
