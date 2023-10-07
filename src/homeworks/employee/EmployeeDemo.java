@@ -27,15 +27,21 @@ public class EmployeeDemo {
                 case "4":
                     searchByCompanyName();
                     break;
+                case "5":
+                    searchByPhoneNumber();
+                    break;
+                case "6":
+                   deleteById();
+                   break;
+                case "7":
+                    changeEmployeeById();
+                    break;
                 default:
                     System.out.println(" Invalid command: Try again! ");
                     break;
+
             }
-
-
         }
-
-
     }
 
     private static void searchByCompanyName() {
@@ -49,13 +55,16 @@ public class EmployeeDemo {
         String keywordID = scanner.nextLine();
         employeeStorage.searchByID(keywordID);
     }
-
+    private static void searchByPhoneNumber() {
+        System.out.println("Please input PhoneNumber");
+        String keywordPhoneNumber = scanner.nextLine();
+        employeeStorage.searchByCompany(keywordPhoneNumber);
+    }
     private static void printAllInformation() {
         System.out.println("--------------------");
         employeeStorage.print();
         System.out.println("--------------------");
     }
-
     private static void addInformation() {
         System.out.println("ENTER YOUR NAME");
         String name = scanner.nextLine();
@@ -74,17 +83,29 @@ public class EmployeeDemo {
         Employee employee = new Employee(name, surname, employeeID, phoneNumber, salary, companyName, position);
         employeeStorage.add(employee);
     }
-
     private static void printCommands() {
-        System.out.println("PLEASE INPUT FOR 0 Exit");
-        System.out.println("PLEASE INPUT FOR 1 ADD EMPLOYEE");
-        System.out.println("PLEASE INPUT FOR 2 PRINT ALL EMPLOYEE");
-        System.out.println("PLEASE INPUT FOR 3 SEARCH EMPLOYEE BY EMPLOYEE ID");
-        System.out.println("PLEASE INPUT FOR 4 SEARCH BY COMPANY NAME");
-        System.out.println("PLEASE INPUT FOR 5 SEARCH EMPLOYEE PHONE");
+        System.out.println("""
+                        PLEASE INPUT 0 FOR Exit
+                        PLEASE INPUT 1 FOR ADD EMPLOYEE
+                        PLEASE INPUT 2 FOR PRINT ALL EMPLOYEE
+                        PLEASE INPUT 3 FOR SEARCH EMPLOYEE BY EMPLOYEE ID
+                        PLEASE INPUT 4 FOR SEARCH BY COMPANY NAME
+                        PLEASE INPUT 5 FOR SEARCH EMPLOYEE PHONE
+                        PLEASE INPUT 6 FOR DELETE BY ID
+                        PLEASE INPUT 7 FOR CHANGE """);
+
 
     }
-
+     private static void deleteById() {
+        System.out.println("Enter the ID to delete:");
+        String tmp = scanner.nextLine();
+        employeeStorage.deleteById(tmp);
+    }
+private static void changeEmployeeById(){
+    System.out.println("PLEASE INPUT ID OF THE EMPLOYEE TO EDIT");
+    String tmp = scanner.nextLine();
+    employeeStorage.changeEmployeeById(tmp);
+}
 }
 
 
