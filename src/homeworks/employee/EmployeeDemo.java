@@ -101,7 +101,7 @@ public class EmployeeDemo {
         String tmp = scanner.nextLine();
         employeeStorage.deleteById(tmp);
     }
-private static void changeEmployeeById(){
+private static void changeEmployeeById() {
     System.out.println("PLEASE INPUT ID OF THE EMPLOYEE TO EDIT");
     String tmp = scanner.nextLine();
     employeeStorage.changeEmployeeById(tmp);
