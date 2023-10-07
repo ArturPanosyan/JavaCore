@@ -1,6 +1,5 @@
 package homeworks.employee;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class EmployeeStorage {
