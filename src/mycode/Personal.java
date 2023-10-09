@@ -1,6 +1,6 @@
 package mycode;
 
-public class Program {
+public class Personal {
 
     private String name;
     private String surname;
@@ -10,25 +10,29 @@ public class Program {
     private String country;
     private String address;
     private String email;
-    private double phoneNumber;
+    private double phone;
     private String username;
     private String userId;
+    private String company;
 
-    public Program(String name, String surname, String gender, double dateofbirth, double personalId, String country, String address, String email, double phoneNumber, String username, String userId) {
+
+    public Personal(String name, String surname, String gender, double dateofbirth, String personalId, String country, String address, String email, String username, String userId, String company) {
         this.username = username;
         this.userId = userId;
         this.name = name;
         this.surname = surname;
         this.gender = gender;
         this.dateofbirth = dateofbirth;
-        this.personalId = personalId;
+        this.personalId = Double.parseDouble(personalId);
         this.country = country;
         this.address = address;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
+        this.company = company;
+
     }
 
-    public Program() {
+    public Personal(String personalId, String personalName, String personalSurname, double personaldateofbirth, String personalCountry, String personalAddress, String personalEmail, String personalUsername, String personalUserID, Company companyFromStorage) {
     }
 
     public String getName() {
@@ -95,12 +99,12 @@ public class Program {
         this.email = email;
     }
 
-    public double getPhoneNumber() {
-        return phoneNumber;
+    public double getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(double phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(double phone) {
+        this.phone = phone;
     }
 
     public String getUsername() {
@@ -120,9 +124,17 @@ public class Program {
     }
 
 
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
     @Override
     public String toString() {
-        return "Program{" +
+        return "Personal{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", gender='" + gender + '\'' +
@@ -131,7 +143,7 @@ public class Program {
                 ", country='" + country + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                ", phone=" + phone +
                 ", username='" + username + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

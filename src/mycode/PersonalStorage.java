@@ -1,24 +1,23 @@
 package mycode;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
-public class ProgramStorage {
+public class PersonalStorage {
 
-    private Program[] programs = new Program[100];
+    private Personal[] personals = new Personal[100];
     private int size;
     Scanner scanner = new Scanner(System.in);
 
-    public void add(Program program) {
-        if (size == programs.length) {
+    public void add(Personal personal) {
+        if (size == personals.length) {
             extend();
         }
-        programs[size++] = program;
+        personals[size++] = personal;
     }
 
     public void print() {
         for (int i = 0; i < size; i++) {
-            System.out.println(programs[i]);
+            System.out.println(personals[i]);
         }
     }
 
@@ -54,8 +53,8 @@ public class ProgramStorage {
 
     public void deleteByPersonalId(String tmp) {
         for (int i = 0; i < size; i++) {
-            if (tmp.equals(programs[i].getPersonalId())) {
-                programs[i] = programs[i + 1];
+            if (tmp.equals(personals[i].getPersonalId())) {
+                personals[i] = personals[i + 1];
             }
             size--;
         }
@@ -64,40 +63,60 @@ public class ProgramStorage {
 
     public void changeProgramByPersonalId(String tmp) {
         for (int i = 0; i < size; i++) {
-            if(tmp.equals(programs[i].getPersonalId())) {
+            if(tmp.equals(personals[i].getPersonalId())) {
                 System.out.println("Please edit your Username: ");
-                programs[i].setUsername(scanner.nextLine());
+                personals[i].setUsername(scanner.nextLine());
                 System.out.println("Please edit your UserID: ");
-                programs[i].setUserId(scanner.nextLine());
+                personals[i].setUserId(scanner.nextLine());
                 System.out.println("Please edit your Name: ");
-                programs[i].setName(scanner.nextLine());
+                personals[i].setName(scanner.nextLine());
                 System.out.println("Please edit your Surname: ");
-                programs[i].setSurname(scanner.nextLine());
+                personals[i].setSurname(scanner.nextLine());
                 System.out.println("Please edit your Gender: " +
                         "Male:" + " " + "Female:");
-                programs[i].setGender(scanner.nextLine());
+                personals[i].setGender(scanner.nextLine());
                 System.out.println("Please edit your Date Of Birth: ");
-                programs[i].setDateofbirth(Double.parseDouble(scanner.nextLine()));
+                personals[i].setDateofbirth(Double.parseDouble(scanner.nextLine()));
                 System.out.println("Please edit your Personal ID: ");
-                programs[i].setPersonalId(Double.parseDouble(scanner.nextLine()));
+                personals[i].setPersonalId(Double.parseDouble(scanner.nextLine()));
                 System.out.println("Please edit your Country: ");
-                programs[i].setCountry(scanner.nextLine());
+                personals[i].setCountry(scanner.nextLine());
                 System.out.println("Please edit your Address: ");
-                programs[i].setAddress(scanner.nextLine());
+                personals[i].setAddress(scanner.nextLine());
                 System.out.println("Please edit your Email: ");
-                programs[i].setEmail(scanner.nextLine());
+                personals[i].setEmail(scanner.nextLine());
                 System.out.println("Please edit your Phone Number: ");
-                programs[i].setPhoneNumber(Double.parseDouble(scanner.nextLine()));
-                break;
+                personals[i].setPhone(Double.parseDouble(scanner.nextLine()));
             }
         }
         System.out.println("Persoanl ID " + tmp + " Changed");
     }
 
     private void extend() {
-        Program[] TempArray = new Program[programs.length + 100];
-        System.arraycopy(programs, 0, TempArray, 0, programs.length);
-        programs = TempArray;
+        Personal[] TempArray = new Personal[personals.length + 100];
+        System.arraycopy(personals, 0, TempArray, 0, personals.length);
+        personals = TempArray;
+    }
+
+    public Personal getByID(String personalId) {
+
+        for (int i = 0; i < size; i++) {
+            if(personals[i].getUserId().equals(personalId)){
+                return  personals[i];
+            }
+        }
+        return  null;
+    }
+
+    public void deleteById(String personalID) {
+
+    }
+
+    public void searchPersonalByCompany(Company companyFromStorage) {
+        for (int i = 0; i < size; i++) {
+            if(personals[i].getCompany().equals(companyFromStorage));
+            System.out.println(personals[i]);
+        }
     }
 }
 

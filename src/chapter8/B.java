@@ -12,4 +12,10 @@ public class B extends A {
 
         System.out.println("i + j + k: " + (i + j + k));
     }
+
+    @Override
+    void callme() {
+        // переопределить метод callme()
+        System.out.println("B методе callme() из класса В");
+    }
 }
