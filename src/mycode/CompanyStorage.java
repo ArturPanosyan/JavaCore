@@ -26,9 +26,9 @@ public class CompanyStorage {
     }
 
 
-    public Company getBYId(String companyId) {
+    public Company getBYId(String userId) {
         for (int i = 0; i < size; i++) {
-            if(companies[i].getUserID().equals(companyId)){
+            if(companies[i].getUserID().equals(userId)){
                 return companies[i];
             }
         }

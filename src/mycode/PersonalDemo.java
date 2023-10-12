@@ -226,12 +226,12 @@ public class PersonalDemo {
     private static void printCommands() {
         System.out.println("""
                 PLEASE INPUT 0 FOR Exit
-                PLEASE INPUT 1 FOR ADD_PROGRAM
+                PLEASE INPUT 1 FOR ADD_COMPANY
                 PlEASE INPUT 2 for ADD_PERSONAL
                 PLEASE INPUT 3 FOR PRINT_ALL_COMPANY
                 PLEASE INPUT 4 FOR PRINT_ALL_PERSONAL
-                PLEASE INPUT 5 FOR SEARCH_PROGRAM_BY_EMAIL
-                PLEASE INPUT 6 FOR SEARCH BY PHONE NUMBER
+                PLEASE INPUT 5 FOR SEARCH_PERSONAL_BY_ID
+                PLEASE INPUT 6 FOR SEARCH_PERSONAL_BY_COMPANY
                 PLEASE INPUT 7 FOR CHANGE COMPANY ID
                 PLEASE INPUT 8 FOR CHANGE PERSONAL ID
                 PLEASE INPUT 9 FOR DELETE BY PERSONAL ID
@@ -240,4 +240,19 @@ public class PersonalDemo {
 
             }
 
+    private static double getValidDoubleInput() {
+        double userInput = 0.0;
+        boolean isValid = false;
+        while (!isValid) {
+            try {
+                userInput = Double.parseDouble(scanner.nextLine());
+                isValid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка: Введите корректное число.");
+            }
         }
+        return userInput;
+    }
+
+
+}

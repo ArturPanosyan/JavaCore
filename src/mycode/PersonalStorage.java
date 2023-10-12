@@ -1,12 +1,9 @@
 package mycode;
 
-import java.util.Scanner;
-
 public class PersonalStorage {
 
     private Personal[] personals = new Personal[100];
     private int size;
-    Scanner scanner = new Scanner(System.in);
 
     public void add(Personal personal) {
         if (size == personals.length) {
@@ -43,7 +40,7 @@ public class PersonalStorage {
 
     public boolean searchUsername(String Username) {
         boolean isValidUsername = true;
-        if (!Username.contains("PersonalId") || !Username.contains("name")) {
+        if (!Username.contains("PersonalId") || !Username.contains("Username")) {
             System.out.println("Please for username...");
             isValidUsername = false;
         }
@@ -61,36 +58,7 @@ public class PersonalStorage {
         System.out.println("Personal Id " + tmp + " delected!");
     }
 
-    public void changeProgramByPersonalId(String tmp) {
-        for (int i = 0; i < size; i++) {
-            if(tmp.equals(personals[i].getPersonalId())) {
-                System.out.println("Please edit your Username: ");
-                personals[i].setUsername(scanner.nextLine());
-                System.out.println("Please edit your UserID: ");
-                personals[i].setUserId(scanner.nextLine());
-                System.out.println("Please edit your Name: ");
-                personals[i].setName(scanner.nextLine());
-                System.out.println("Please edit your Surname: ");
-                personals[i].setSurname(scanner.nextLine());
-                System.out.println("Please edit your Gender: " +
-                        "Male:" + " " + "Female:");
-                personals[i].setGender(scanner.nextLine());
-                System.out.println("Please edit your Date Of Birth: ");
-                personals[i].setDateofbirth(Double.parseDouble(scanner.nextLine()));
-                System.out.println("Please edit your Personal ID: ");
-                personals[i].setPersonalId(Double.parseDouble(scanner.nextLine()));
-                System.out.println("Please edit your Country: ");
-                personals[i].setCountry(scanner.nextLine());
-                System.out.println("Please edit your Address: ");
-                personals[i].setAddress(scanner.nextLine());
-                System.out.println("Please edit your Email: ");
-                personals[i].setEmail(scanner.nextLine());
-                System.out.println("Please edit your Phone Number: ");
-                personals[i].setPhone(Double.parseDouble(scanner.nextLine()));
-            }
-        }
-        System.out.println("Persoanl ID " + tmp + " Changed");
-    }
+
 
     private void extend() {
         Personal[] TempArray = new Personal[personals.length + 100];
@@ -98,18 +66,25 @@ public class PersonalStorage {
         personals = TempArray;
     }
 
-    public Personal getByID(String personalId) {
-
+    public int getindexBYId(String personalId) {
         for (int i = 0; i < size; i++) {
             if(personals[i].getUserId().equals(personalId)){
-                return  personals[i];
+                return i;
             }
         }
-        return  null;
+        return  -1;
     }
 
-    public void deleteById(String personalID) {
-
+    public void deleteById(String personalId) {
+        int indexById = getindexBYId(personalId);
+        if(indexById == -1) {
+            System.out.println("PersonalID does not exists!!! ");
+            return;
+        }
+        for (int i = indexById + 1; i < size; i++) {
+            personals[i - 1] = personals[i];
+        }
+        size--;
     }
 
     public void searchPersonalByCompany(Company companyFromStorage) {
@@ -118,6 +93,17 @@ public class PersonalStorage {
             System.out.println(personals[i]);
         }
     }
+
+    public Personal getByID(String personalID) {
+        for (int i = 0; i < size; i++) {
+            if(personals[i].getUserId().equals(personalID)){
+                return personals[i];
+            }
+        }
+   return null;
+    }
+
+
 }
 
 
