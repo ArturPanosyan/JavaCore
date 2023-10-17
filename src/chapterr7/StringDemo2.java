@@ -1,7 +1,5 @@
 package chapterr7;
 
-import bracechecker.Stack;
-
 public class StringDemo2 {
     public static void main(String[] args) {
         String strOb1 = "Первая строка";

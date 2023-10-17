@@ -1,4 +1,4 @@
-package Arrayutil;
+package homework1.Arrayutil;
 
 public class ArrayUtil {
 

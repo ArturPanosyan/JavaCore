@@ -37,7 +37,7 @@ public class CompanyStorage {
 
     public void deleteById(String companyID) {
         int indexById = getindexBYId(companyID);
-        if(indexById == -1) {
+        if( indexById == -1) {
             System.out.println(" Company does not exists!!! ");
             return;
         }

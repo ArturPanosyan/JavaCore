@@ -82,7 +82,7 @@ public class MedicialCenterMenu {
             patientStorage.deleteByPatientId(patientId);
     }
 
-    private static void deleteDoctorById() {
+    public static void deleteDoctorById() {
          doctorStorage.print();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
@@ -91,10 +91,10 @@ public class MedicialCenterMenu {
             System.out.println("Doctor with " + doctorId + " does not exists!!!");
               return;
         }
-        doctorStorage.deleteById(doctorId);
+
     }
 
-    private static void printAllPatientsByDoctor() {
+    public static void printAllPatientsByDoctor() {
         doctorStorage.print();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
@@ -106,7 +106,7 @@ public class MedicialCenterMenu {
         patientStorage.searchPatientByDoctor(doctorFromStorage);
     }
 
-    private static void addPatient() {
+    public static void addPatient() {
         doctorStorage.print();
         System.out.println("Please input Doctor ID: ");
         String doctorId = scanner.nextLine();
@@ -131,13 +131,10 @@ public class MedicialCenterMenu {
             Patient patient = new Patient(patientId, patientName, patientSurname, patientPhone, doctorFromStorage, registerDate);
             patientStorage.add(patient);
             System.out.println("Patient Registered: ");
-
         }
-
-
     }
 
-    private static void changeDoctorById() {
+    public static void changeDoctorById() {
         doctorStorage.print();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();

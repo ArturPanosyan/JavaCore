@@ -1,6 +1,4 @@
-package bracechecker;
-
-import bracechecker.Stack;
+package homework1.bracechecker;
 
 public class StackDemo {
     public static void main(String[] args) {

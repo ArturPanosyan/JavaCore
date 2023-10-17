@@ -1,6 +1,6 @@
 package classwork.chapter7;
 
-import Arrayutil.ArrayUtil;
+import homework1.Arrayutil.ArrayUtil;
 
 import java.util.Scanner;
 
