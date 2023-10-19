@@ -2,207 +2,172 @@ package medicialcenter;
 
 import medicialcenter.model.Doctor;
 import medicialcenter.model.Patient;
-import medicialcenter.storage.DoctorStorage;
-import medicialcenter.storage.PatientStorage;
+import medicialcenter.storage.PersonStorage;
+import medicialcenter.util.DateUtil;
 
-import java.sql.SQLOutput;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
 
-public class MedicialCenterMenu {
+public class MedicialCenterMenu implements Commands {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static DoctorStorage doctorStorage = new DoctorStorage();
-    private static PatientStorage patientStorage = new PatientStorage();
+    private static PersonStorage personStorage = new PersonStorage();
+
 
     public static void main(String[] args) {
         boolean isRun = true;
 
         while (isRun) {
-            printCommand();
+            Commands.printCommands();
             String command = scanner.nextLine();
             switch (command) {
-                case "0":
+                case Exit:
                     isRun = false;
                     break;
-                case "1":
+                case ADD_DOCTOR:
                     addDoctor();
                     break;
-                case "2":
+                case SEARCH_DOCTOR_BY_PROFESSION:
                     searchDoctorByProfession();
                     break;
-                case "3":
+                case DELETE_DOCTOR_BY_ID:
                     deleteDoctorById();
                     break;
-                case "4":
+                case CHANGE_DOCTOR_BY_ID:
                     changeDoctorById();
                     break;
-                case "5":
+                case ADD_PATIENT:
                     addPatient();
                     break;
-                case "6":
-                    printAllPatientsByDoctor();
+                case PRINT_ALL_PATIENTS_BY_DOCTOR:
                     break;
-                case "7":
-                    patientStorage.print();
+                case PRINT_TODAYS_PATIENTS:
+                    personStorage.printTodaysPatients();
                     break;
-                case "8":
+                case DELETE_PATIENTS_BY_ID:
                     deletePatientById();
                     break;
                 default:
-                    System.out.println("Invalid Command: Try Again: ");
+                    System.out.println("Wrong Command: ");
                     break;
             }
         }
     }
 
-    private static void deletePatientById() {
-        patientStorage.print();
-        System.out.println("Please input Patient Id: ");
-        String patientId = scanner.nextLine();
-        Patient patientFromStorage = patientStorage.getById(patientId);
-        if(patientFromStorage == null) {
-            System.out.println("Patient with " + patientId + "does not exists!!!");
-       return;
-        }
-        doctorStorage.searchDoctorByprofession(patientId);
-        System.out.println("Please input Doctor ID: ");
-        String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if(doctorFromStorage == null) {
-            System.out.println("Doctor with " + patientId + "does not exists!!!!");
-            return;
-        }
-        if(!patientFromStorage.getDoctor().equals(doctorFromStorage)){
-            System.out.println("Wrong Patient ID: ");
-            return;
-        }
-            patientStorage.deleteByPatientId(patientId);
+    public static void deletePatientById() {
     }
 
+
+    private static void addDoctor() {
+        System.out.println("Please input Id, Name, Surname, Phone, Email, Profession: ");
+        String doctorDataStr = scanner.nextLine();
+        String[] doctorData = doctorDataStr.split(",");
+        String doctorId = doctorData[0];
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById == null) {
+            Doctor doctor = new Doctor();
+            doctor.setId(doctorId);
+            doctor.setName(doctorData[1]);
+            doctor.setSurname(doctorData[2]);
+            doctor.setPhone(doctorData[3]);
+            doctor.setEmail(doctorData[4]);
+            doctor.setProfession(doctorData[5]);
+            personStorage.add(doctor);
+            System.out.println("Doctor Registered! ");
+        } else {
+            System.out.println("Doctor with " + doctorId + "does not exists!!!");
+        }
+    }
+
+
+    public static void searchDoctorByProfession() {
+        System.out.println("Please input Doctor Profession: ");
+        String doctorProfession = scanner.nextLine();
+        personStorage.searchDoctorByprofession(doctorProfession);
+    }
+
+
+
     public static void deleteDoctorById() {
-         doctorStorage.print();
+        personStorage.printDoctors();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if(doctorFromStorage == null) {
-            System.out.println("Doctor with " + doctorId + " does not exists!!!");
-              return;
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById != null) {
+            personStorage.deleteDoctorById(doctorId);
+        } else {
+            System.out.println("Doctor with " + doctorId + "does not exists!!!!");
         }
-
     }
 
     public static void printAllPatientsByDoctor() {
-        doctorStorage.print();
+        personStorage.printDoctors();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if (doctorFromStorage == null) {
-            System.out.println("Doctor with " + doctorId + " does not exists!!!");
-            return;
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById != null) {
+            personStorage.printAllPatientsByDoctor(doctorById);
+        } else {
+            System.out.println("Doctor with" + doctorId + "does not exists!!!");
         }
-        patientStorage.searchPatientByDoctor(doctorFromStorage);
+
     }
 
     public static void addPatient() {
-        doctorStorage.print();
-        System.out.println("Please input Doctor ID: ");
+        personStorage.printDoctors();
+        System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if (doctorFromStorage == null) {
-            System.out.println("Doctor with " + doctorId + " does not exists!");
-            return;
-        }
-        System.out.println("Please input Patient Id: ");
-        String patientId = scanner.nextLine();
-        Patient patientfromStorage = patientStorage.getById(patientId);
-        if (patientfromStorage == null) {
-            System.out.println("Please input Patient Name: ");
-            String patientName = scanner.nextLine();
-            System.out.println("Please input Patient Surname: ");
-            String patientSurname = scanner.nextLine();
-            System.out.println("Please input Patient Phone: ");
-            String patientPhone = scanner.nextLine();
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy ");
-            String registerDate = sdf.format(date);
-            Patient patient = new Patient(patientId, patientName, patientSurname, patientPhone, doctorFromStorage, registerDate);
-            patientStorage.add(patient);
-            System.out.println("Patient Registered: ");
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById != null) {
+            System.out.println("Please input Id, Name, Surname, Phone, registerDateTime(26/02/2023 14:00): ");
+            String patientDataStr = scanner.nextLine();
+            String[] patientData = patientDataStr.split(",");
+            try {
+                Date registerDateTime = DateUtil.stringToDateTime(patientData[4]);
+                if (personStorage.isDoctorAvailable(doctorById, registerDateTime)) {
+                    Patient patient = new Patient();
+                    patient.setId(patientData[0]);
+                    patient.setName(patientData[1]);
+                    patient.setSurname(patientData[2]);
+                    patient.setPhone(patientData[3]);
+                    patient.setDoctor(doctorById);
+                    patient.setRegisterDateTime(registerDateTime);
+                    personStorage.add(patient);
+                    System.out.println("Patient Registered: ");
+                } else {
+                    System.out.println("Doctor is unavailable in that time: Please choose another time ");
+                }
+            } catch (ParseException e) {
+                System.out.println("Incorrect date time format: Please try again! ");
+                throw new RuntimeException(e);
+            }
+
+        } else {
+            System.out.println("Doctor with" + doctorId + "does not exists!!!");
         }
     }
 
     public static void changeDoctorById() {
-        doctorStorage.print();
+        personStorage.printDoctors();
         System.out.println("Please input Doctor Id: ");
         String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if (doctorFromStorage == null) {
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById != null) {
+            System.out.println("Please input Name, Surname, Phone, Email, Profession: ");
+            String doctorDataStr = scanner.nextLine();
+            String[] doctorData = doctorDataStr.split(",");
+            doctorById.setName(doctorData[0]);
+            doctorById.setSurname(doctorData[1]);
+            doctorById.setPhone(doctorData[2]);
+            doctorById.setEmail(doctorData[3]);
+            doctorById.setProfession(doctorData[4]);
+            System.out.println("Doctor changed: ");
+        } else {
             System.out.println("Doctor with " + doctorId + "does not exists!!! ");
-            return;
-        }
-        System.out.println("Please input Doctor New Name: ");
-        String doctorName = scanner.nextLine();
-        System.out.println("Please input Doctor New Surname: ");
-        String doctorSurname = scanner.nextLine();
-        System.out.println("Please input Doctor New Phone: ");
-        String doctorPhone = scanner.nextLine();
-        System.out.println("Please input Doctor New Profession: ");
-        String doctorProfession = scanner.nextLine();
-        System.out.println("Please input Doctor New Email: ");
-        String doctorEmail = scanner.nextLine();
-        doctorFromStorage.setName(doctorName);
-        doctorFromStorage.setSurname(doctorSurname);
-        doctorFromStorage.setPhone(doctorPhone);
-        doctorFromStorage.setProfession(doctorProfession);
-        doctorFromStorage.setEmail(doctorEmail);
-        System.out.println("Doctor Updated! ");
-    }
-
-    private static void searchDoctorByProfession() {
-        System.out.println("Please input Doctor Profession: ");
-        String doctorProfession = scanner.nextLine();
-        doctorStorage.searchDoctorByprofession(doctorProfession);
-    }
-
-    private static void addDoctor() {
-        System.out.println("Please input Doctor Id: ");
-        String doctorId = scanner.nextLine();
-        Doctor doctorFromStorage = doctorStorage.getById(doctorId);
-        if (doctorFromStorage == null) {
-            System.out.println("Please input Doctor Name: ");
-            String doctorName = scanner.nextLine();
-            System.out.println("Please input Doctor Surname: ");
-            String doctorSurname = scanner.nextLine();
-            System.out.println("Please input Doctor Phone: ");
-            String doctorPhone = scanner.nextLine();
-            System.out.println("Please input Doctor Profession: ");
-            String doctorProfession = scanner.nextLine();
-            System.out.println("Please input Doctor Email: ");
-            String doctorEmail = scanner.nextLine();
-            Doctor doctor = new Doctor(doctorId, doctorName, doctorSurname, doctorPhone, doctorProfession, doctorEmail);
-            doctorStorage.add(doctor);
-            System.out.println("Doctor Registered! ");
         }
 
     }
-
-
-    private static void printCommand() {
-        System.out.println("""
-                Please input 0 for Exit:
-                Please input 1 for  Add_Doctor:
-                Please input 2 for Search Doctor By Profession:
-                Please input 3 for Delete Doctor By Id:
-                Please input 4 for Change Doctor By Id:
-                Please input 5 for Add_Patient:
-                Please input 6 for Print All Patients By Doctor:
-                Please input 7 for Print Patients:
-                Please input 8 for Delete Patient By Id:
-                """);
-    }
-
 }
-

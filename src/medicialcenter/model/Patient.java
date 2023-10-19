@@ -1,17 +1,20 @@
 package medicialcenter.model;
 
+import java.util.Date;
+import java.util.Objects;
+
 public class Patient extends Person {
 
     private  Doctor doctor;
-    private String registerDate;
+    private Date registerDateTime;
 
     public Patient() {
     }
 
-    public Patient(String id, String name, String surname, String phone, Doctor doctor, String registerDate) {
+    public Patient(String id, String name, String surname, String phone, Doctor doctor, Date registerDateTime) {
         super(id, name, surname, phone);
         this.doctor = doctor;
-        this.registerDate = registerDate;
+        this.registerDateTime = registerDateTime;
     }
 
     public Doctor getDoctor() {
@@ -22,37 +25,39 @@ public class Patient extends Person {
         this.doctor = doctor;
     }
 
-    public String getRegisterDate() {
-        return registerDate;
+    public Date getRegisterDateTime() {
+        return registerDateTime;
     }
 
-    public void setRegisterDate(String registerDate) {
-        this.registerDate = registerDate;
+    public void setRegisterDateTime(Date registerDateTime) {
+        this.registerDateTime = registerDateTime;
     }
 
     @Override
     public String toString() {
         return "Patient{" +
                 "doctor=" + doctor +
-                ", registerDate='" + registerDate + '\'' +
-                '}';
+                ", registerDateTime=" + registerDateTime +
+                "} " + super.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Patient patient)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        if (getDoctor() != null ? !getDoctor().equals(patient.getDoctor()) : patient.getDoctor() != null) return false;
-        return getRegisterDate() != null ? getRegisterDate().equals(patient.getRegisterDate()) : patient.getRegisterDate() == null;
+        Patient patient = (Patient) o;
+
+        if (!Objects.equals(doctor, patient.doctor)) return false;
+        return Objects.equals(registerDateTime, patient.registerDateTime);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (getDoctor() != null ? getDoctor().hashCode() : 0);
-        result = 31 * result + (getRegisterDate() != null ? getRegisterDate().hashCode() : 0);
+        result = 31 * result + (doctor != null ? doctor.hashCode() : 0);
+        result = 31 * result + (registerDateTime != null ? registerDateTime.hashCode() : 0);
         return result;
     }
 }

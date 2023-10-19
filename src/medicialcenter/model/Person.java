@@ -1,6 +1,6 @@
 package medicialcenter.model;
 
-public class Person {
+public abstract class Person {
 
 
     private String Id;

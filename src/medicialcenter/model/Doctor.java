@@ -1,5 +1,7 @@
 package medicialcenter.model;
 
+import java.util.Objects;
+
 public class Doctor extends Person {
 
     private String profession;
@@ -35,25 +37,26 @@ public class Doctor extends Person {
         return "Doctor{" +
                 "profession='" + profession + '\'' +
                 ", email='" + email + '\'' +
-                '}';
+                "} " + super.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Doctor doctor)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        if (getProfession() != null ? !getProfession().equals(doctor.getProfession()) : doctor.getProfession() != null)
-            return false;
-        return getEmail() != null ? getEmail().equals(doctor.getEmail()) : doctor.getEmail() == null;
+        Doctor doctor = (Doctor) o;
+
+        if (!Objects.equals(profession, doctor.profession)) return false;
+        return Objects.equals(email, doctor.email);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (getProfession() != null ? getProfession().hashCode() : 0);
-        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (profession != null ? profession.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }
 }
