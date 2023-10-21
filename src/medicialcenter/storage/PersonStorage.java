@@ -94,17 +94,13 @@ public class PersonStorage {
         }
     }
 
-    private void extend() {
-        Person[] tmp = new Person[people.length + 10];
-        System.arraycopy(people, 0, tmp, 0, people.length);
-        people = tmp;
-    }
-
-    private void deleteByIndex(int i) {
-        for (int j = i; j < size; j++) {
-            people[j] = people[j + 1];
+    public void deletePatientById(String Id) {
+        for (int i = 0; i < size; i++) {
+            Person person = people[i];
+            if (person.getId().equals(Id) && person instanceof Patient) {
+                deleteByIndex(i);
+            }
         }
-        size--;
     }
 
     public boolean isDoctorAvailable(Doctor doctor, Date registerDateTime) {
@@ -119,5 +115,18 @@ public class PersonStorage {
             }
         }
         return true;
+    }
+
+    private void extend() {
+        Person[] tmp = new Person[people.length + 10];
+        System.arraycopy(people, 0, tmp, 0, people.length);
+        people = tmp;
+    }
+
+    private void deleteByIndex(int i) {
+        for (int j = i; j < size; j++) {
+            people[j] = people[j + 1];
+        }
+        size--;
     }
 }

@@ -5,6 +5,7 @@ import medicialcenter.model.Patient;
 import medicialcenter.storage.PersonStorage;
 import medicialcenter.util.DateUtil;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,6 +59,15 @@ public class MedicialCenterMenu implements Commands {
     }
 
     public static void deletePatientById() {
+        personStorage.printTodaysPatients();
+        System.out.println("Please input Patients Id: ");
+        String patientId = scanner.nextLine();
+        Patient patientById = (Patient) personStorage.getById(patientId);
+        if (patientById != null) {
+            personStorage.deletePatientById(patientId);
+        } else {
+            System.out.println("Patient with " + patientId + "does not exists!!!");
+        }
     }
 
 
@@ -66,30 +76,32 @@ public class MedicialCenterMenu implements Commands {
         String doctorDataStr = scanner.nextLine();
         String[] doctorData = doctorDataStr.split(",");
         String doctorId = doctorData[0];
-        Doctor doctorById = personStorage.getDoctorById(doctorId);
-        if (doctorById == null) {
-            Doctor doctor = new Doctor();
-            doctor.setId(doctorId);
-            doctor.setName(doctorData[1]);
-            doctor.setSurname(doctorData[2]);
-            doctor.setPhone(doctorData[3]);
-            doctor.setEmail(doctorData[4]);
-            doctor.setProfession(doctorData[5]);
-            personStorage.add(doctor);
-            System.out.println("Doctor Registered! ");
-        } else {
-            System.out.println("Doctor with " + doctorId + "does not exists!!!");
+        try {
+            Doctor doctorById = personStorage.getDoctorById(doctorId);
+            if (doctorById == null) {
+                Doctor doctor = new Doctor();
+                doctor.setId(doctorId);
+                doctor.setName(doctorData[1]);
+                doctor.setSurname(doctorData[2]);
+                doctor.setPhone(doctorData[3]);
+                doctor.setEmail(doctorData[4]);
+                doctor.setProfession(doctorData[5]);
+                personStorage.add(doctor);
+                System.out.println("Doctor Registered! ");
+            }else{
+                System.out.println("Doctor with " + doctorId + "does not exists!!!");
+            }
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Incorrect Doctor registered: Please try again! ");
         }
     }
 
 
     public static void searchDoctorByProfession() {
         System.out.println("Please input Doctor Profession: ");
-        String doctorProfession = scanner.nextLine();
-        personStorage.searchDoctorByprofession(doctorProfession);
+        String profession = scanner.nextLine();
+        personStorage.searchDoctorByprofession(profession);
     }
-
-
 
     public static void deleteDoctorById() {
         personStorage.printDoctors();
@@ -142,9 +154,7 @@ public class MedicialCenterMenu implements Commands {
                 }
             } catch (ParseException e) {
                 System.out.println("Incorrect date time format: Please try again! ");
-                throw new RuntimeException(e);
             }
-
         } else {
             System.out.println("Doctor with" + doctorId + "does not exists!!!");
         }
