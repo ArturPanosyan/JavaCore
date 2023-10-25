@@ -18,7 +18,7 @@ public class MedicialCenterMenu implements Commands {
     private static PersonStorage personStorage = new PersonStorage();
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MyException {
         boolean isRun = true;
 
         while (isRun) {
@@ -51,6 +51,9 @@ public class MedicialCenterMenu implements Commands {
                 case DELETE_PATIENTS_BY_ID:
                     deletePatientById();
                     break;
+                case SEARCH_EMAIL_BY_ID:
+                    searchEmailById();
+                    break;
                 default:
                     System.out.println("Wrong Command: ");
                     break;
@@ -70,29 +73,35 @@ public class MedicialCenterMenu implements Commands {
         }
     }
 
+    public static void searchEmailById() throws MyException {
+        System.out.println("Please input Email To Search:");
+        String emailId = scanner.nextLine();
+        try {
+            searchEmailById();
+        } catch (MyException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     private static void addDoctor() {
         System.out.println("Please input Id, Name, Surname, Phone, Email, Profession: ");
         String doctorDataStr = scanner.nextLine();
         String[] doctorData = doctorDataStr.split(",");
         String doctorId = doctorData[0];
-        try {
-            Doctor doctorById = personStorage.getDoctorById(doctorId);
-            if (doctorById == null) {
-                Doctor doctor = new Doctor();
-                doctor.setId(doctorId);
-                doctor.setName(doctorData[1]);
-                doctor.setSurname(doctorData[2]);
-                doctor.setPhone(doctorData[3]);
-                doctor.setEmail(doctorData[4]);
-                doctor.setProfession(doctorData[5]);
-                personStorage.add(doctor);
-                System.out.println("Doctor Registered! ");
-            }else{
-                System.out.println("Doctor with " + doctorId + "does not exists!!!");
-            }
-        } catch (UnsupportedOperationException e) {
-            System.out.println("Incorrect Doctor registered: Please try again! ");
+        Doctor doctorById = personStorage.getDoctorById(doctorId);
+        if (doctorById == null) {
+            Doctor doctor = new Doctor();
+            doctor.setId(doctorId);
+            doctor.setName(doctorData[1]);
+            doctor.setSurname(doctorData[2]);
+            doctor.setPhone(doctorData[3]);
+            doctor.setEmail(doctorData[4]);
+            doctor.setProfession(doctorData[5]);
+            personStorage.add(doctor);
+            System.out.println("Doctor Registered! ");
+        } else {
+            System.out.println("Doctor with " + doctorId + "does not exists!!!");
         }
     }
 
@@ -101,7 +110,9 @@ public class MedicialCenterMenu implements Commands {
         System.out.println("Please input Doctor Profession: ");
         String profession = scanner.nextLine();
         personStorage.searchDoctorByprofession(profession);
+
     }
+
 
     public static void deleteDoctorById() {
         personStorage.printDoctors();

@@ -11,6 +11,7 @@ public interface Commands {
     String PRINT_ALL_PATIENTS_BY_DOCTOR = "6";
     String PRINT_TODAYS_PATIENTS = "7";
     String DELETE_PATIENTS_BY_ID = "8";
+    String SEARCH_EMAIL_BY_ID = "9";
 
     static void printCommands() {
         System.out.println("Please input " + 0 + " for Exit");
@@ -22,5 +23,6 @@ public interface Commands {
         System.out.println("Please input " + 6 + " for PRINT_ALL_PATIENTS_BY_DOCTOR");
         System.out.println("Please input " + 7 + " for PRINT_TODAYS_PATIENTS");
         System.out.println("Please input " + 8 + " for DELETE_PATIENTS_BY_ID");
+        System.out.println("Please input " + 9 + " for SEARCH_EMAIL_BY_ID");
     }
 }

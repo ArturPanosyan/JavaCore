@@ -1,5 +1,6 @@
 package medicialcenter.storage;
 
+import medicialcenter.MyException;
 import medicialcenter.model.Doctor;
 import medicialcenter.model.Patient;
 import medicialcenter.model.Person;
@@ -7,7 +8,7 @@ import medicialcenter.util.DateUtil;
 
 import java.util.Date;
 
-public class PersonStorage {
+public class PersonStorage  {
 
     private Person[] people = new Person[10];
     private int size;
@@ -117,6 +118,15 @@ public class PersonStorage {
         return true;
     }
 
+    private static void searchEmailById(String email) throws MyException {
+        if(email.startsWith("dr") || email.endsWith(".com")){
+             throw new MyException(email);
+         }
+         System.out.println("Неправильный формат email" );
+            }
+
+
+
     private void extend() {
         Person[] tmp = new Person[people.length + 10];
         System.arraycopy(people, 0, tmp, 0, people.length);
@@ -129,4 +139,6 @@ public class PersonStorage {
         }
         size--;
     }
+
+
 }
