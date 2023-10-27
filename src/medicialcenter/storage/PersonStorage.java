@@ -1,6 +1,5 @@
 package medicialcenter.storage;
 
-import medicialcenter.MyException;
 import medicialcenter.model.Doctor;
 import medicialcenter.model.Patient;
 import medicialcenter.model.Person;
@@ -117,13 +116,6 @@ public class PersonStorage  {
         }
         return true;
     }
-
-    private static void searchEmailById(String email) throws MyException {
-        if(email.startsWith("dr") || email.endsWith(".com")){
-             throw new MyException(email);
-         }
-         System.out.println("Неправильный формат email" );
-            }
 
 
 

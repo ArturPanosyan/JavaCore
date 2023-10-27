@@ -1,7 +1,12 @@
 package employeemanagement;
 
+import employeemanagement.exception.ModelNotFoundException;
+import employeemanagement.model.Company;
+import employeemanagement.model.Employee;
+import employeemanagement.storage.CompanyStorage;
+import employeemanagement.storage.EmployeeStorage;
+
 import java.util.Scanner;
-import java.util.concurrent.Callable;
 
 public class EmployeeManagementMain {
 
@@ -62,41 +67,41 @@ public class EmployeeManagementMain {
         companyStorage.print();
         String companyID = scanner.nextLine();
         Company companyFromStorage = companyStorage.getBYId(companyID);
-        if(companyFromStorage == null) {
+        if (companyFromStorage == null) {
             System.out.println(" Company with " + companyID + "does not exists!!! ");
             return;
         }
         employeeStorage.searchEmployessByCompany(companyFromStorage);
         System.out.println("Please input employee ID: ");
         String employeeID = scanner.nextLine();
-        Employee employeeFromStorage = employeeStorage.getByID(employeeID);
-        if(employeeFromStorage == null) {
-            System.out.println("Employee with " + employeeID + "ID does not exists!!! ");
-            return;
+        try {
+            Employee employeeFromStorage = employeeStorage.getByID(employeeID);
+            System.out.println("Please input Employee Name: ");
+            String employeeName = scanner.nextLine();
+            System.out.println("Please input Employee Surname: ");
+            String employeeSurname = scanner.nextLine();
+            System.out.println("Please input Employee Phone: ");
+            String employeePhone = scanner.nextLine();
+            System.out.println("Please input Employee Position: ");
+            String employeePosition = scanner.nextLine();
+            System.out.println("Please input Employee Salary USD: ");
+            double employeeSalary = Double.parseDouble(scanner.nextLine());
+            employeeFromStorage.setName(employeeName);
+            employeeFromStorage.setSurname(employeeSurname);
+            employeeFromStorage.setPosition(employeePosition);
+            employeeFromStorage.setSalary(employeeSalary);
+            employeeFromStorage.setPhone(employeePhone);
+            System.out.println("Employee Updated! ");
+        } catch (ModelNotFoundException m) {
+            System.out.println(m.getMessage());
         }
-        System.out.println("Please input Employee Name: ");
-        String employeeName = scanner.nextLine();
-        System.out.println("Please input Employee Surname: ");
-        String employeeSurname = scanner.nextLine();
-        System.out.println("Please input Employee Phone: ");
-        String employeePhone = scanner.nextLine();
-        System.out.println("Please input Employee Position: ");
-        String employeePosition = scanner.nextLine();
-        System.out.println("Please input Employee Salary USD: ");
-        double employeeSalary = Double.parseDouble(scanner.nextLine());
-        employeeFromStorage.setName(employeeName);
-        employeeFromStorage.setSurname(employeeSurname);
-        employeeFromStorage.setPosition(employeePosition);
-        employeeFromStorage.setSalary(employeeSalary);
-        employeeFromStorage.setPhone(employeePhone);
-        System.out.println("Employee Updated! ");
     }
 
     private static void changeCompany() {
         System.out.println("Please input Company ID: ");
         String companyID = scanner.nextLine();
         Company companyFromStorage = companyStorage.getBYId(companyID);
-        if(companyFromStorage == null) {
+        if (companyFromStorage == null) {
             System.out.println("Company with " + companyID + "does not exists!!! ");
             return;
         }
@@ -107,14 +112,14 @@ public class EmployeeManagementMain {
         companyFromStorage.setName(companyName);
         companyFromStorage.setAddress(companyAddress);
         System.out.println("Company Updated: ");
-        }
+    }
 
     private static void deleteEmployee() {
         System.out.println("Please choose Company ID: ");
         companyStorage.print();
         String companyId = scanner.nextLine();
         Company companyFromStorage = companyStorage.getBYId(companyId);
-        if(companyFromStorage == null) {
+        if (companyFromStorage == null) {
             System.out.println("Company with " + companyId + " does not exists!!! ");
             return;
         }
@@ -122,17 +127,18 @@ public class EmployeeManagementMain {
 
         System.out.println("Please input Employee ID: ");
         String employeeID = scanner.nextLine();
-        Employee employeeFromStorage = employeeStorage.getByID(employeeID);
-        if(employeeFromStorage == null) {
-            System.out.println("Employee does not exists!!! ");
-            return;
+        try {
+            Employee employeeFromStorage = employeeStorage.getByID(employeeID);
+            if (!employeeFromStorage.getCompany().equals(companyFromStorage)) {
+                System.out.println("Wrong employee ID: ");
+                return;
+            }
+            employeeStorage.deleteById(employeeID);
+        } catch (ModelNotFoundException m) {
+            System.out.println(m.getMessage());
         }
-        if(!employeeFromStorage.getCompany().equals(companyFromStorage)) {
-            System.out.println("Wrong employee ID: ");
-            return;
-        }
-        employeeStorage.deleteById(employeeID);
     }
+
     private static void deleteCompany() {
         System.out.println("Please choose CompanyID: ");
         companyStorage.print();
@@ -162,14 +168,12 @@ public class EmployeeManagementMain {
     private static void searchEmployeeById() {
         System.out.println("Please input Employee ID");
         String employeeId = scanner.nextLine();
-        Employee byId = employeeStorage.getByID(employeeId);
-        if(byId == null){
-            System.out.println("Employee does not exists!!");
-        } else{
-            System.out.println(byId);
+        try {
+            System.out.println(employeeStorage.getByID(employeeId));
+        } catch (ModelNotFoundException m){
+            System.out.println(m.getMessage());
         }
     }
-
     private static void addEmployee() {
         System.out.println("Please Choose Company ID");
         companyStorage.print();
@@ -181,11 +185,14 @@ public class EmployeeManagementMain {
         }
         System.out.println("Please input Employee ID ");
         String employeeId = scanner.nextLine();
-        Employee employeeFromStorage = employeeStorage.getByID(employeeId);
-        if(employeeFromStorage != null){
-            System.out.println("Employee with " + employeeId + "ID already exists!!!");
-            return;
+        boolean exists;
+        try{
+          employeeStorage.getByID(employeeId);
+            exists = true;
+        } catch (ModelNotFoundException m){
+            exists = false;
         }
+        if(!exists) {
         System.out.println(" Please input Employee Name: ");
         String employeeName = scanner.nextLine();
         System.out.println(" Please input Employee Surname: ");
@@ -196,10 +203,11 @@ public class EmployeeManagementMain {
         String employeePosition = scanner.nextLine();
         System.out.println(" Please input Employee Salary USD: ");
         double employeeSalary = Double.parseDouble(scanner.nextLine());
-        Employee employee = new Employee(employeeId, employeeName, employeeSurname, employeePhone, employeeSalary, employeePosition,companyFromStorage);
+        Employee employee = new Employee(employeeId, employeeName, employeeSurname, employeePhone, employeeSalary, employeePosition, companyFromStorage);
         employeeStorage.add(employee);
         System.out.println("Employee Registered! ");
     }
+        }
 
     private static void addCompany() {
         System.out.println("Plese input Company ID");

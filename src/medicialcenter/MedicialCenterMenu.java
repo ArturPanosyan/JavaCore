@@ -18,7 +18,7 @@ public class MedicialCenterMenu implements Commands {
     private static PersonStorage personStorage = new PersonStorage();
 
 
-    public static void main(String[] args) throws MyException {
+    public static void main(String[] args)  {
         boolean isRun = true;
 
         while (isRun) {
@@ -51,9 +51,6 @@ public class MedicialCenterMenu implements Commands {
                 case DELETE_PATIENTS_BY_ID:
                     deletePatientById();
                     break;
-                case SEARCH_EMAIL_BY_ID:
-                    searchEmailById();
-                    break;
                 default:
                     System.out.println("Wrong Command: ");
                     break;
@@ -73,16 +70,7 @@ public class MedicialCenterMenu implements Commands {
         }
     }
 
-    public static void searchEmailById() throws MyException {
-        System.out.println("Please input Email To Search:");
-        String emailId = scanner.nextLine();
-        try {
-            searchEmailById();
-        } catch (MyException e) {
-            System.out.println(e.getMessage());
-        }
 
-    }
 
     private static void addDoctor() {
         System.out.println("Please input Id, Name, Surname, Phone, Email, Profession: ");

@@ -1,4 +1,6 @@
-package employeemanagement;
+package employeemanagement.storage;
+
+import employeemanagement.model.Company;
 
 public class CompanyStorage {
 

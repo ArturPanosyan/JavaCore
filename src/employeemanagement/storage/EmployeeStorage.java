@@ -1,4 +1,8 @@
-package employeemanagement;
+package employeemanagement.storage;
+
+import employeemanagement.exception.ModelNotFoundException;
+import employeemanagement.model.Company;
+import employeemanagement.model.Employee;
 
 public class EmployeeStorage {
     
@@ -26,13 +30,14 @@ public class EmployeeStorage {
     }
 
 
-    public Employee getByID(String employeeId) {
+    public Employee getByID(String employeeId) throws ModelNotFoundException {
         for (int i = 0; i < size; i++) {
             if(employees[i].getId().equals(employeeId)){
                 return  employees[i];
             }
         }
-        return  null;
+       throw new ModelNotFoundException ("Employe with " + employeeId + " does not exists!!!");
+
     }
 
     public void searchEmployessByCompany(Company companyFromStorage) {

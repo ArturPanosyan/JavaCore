@@ -1,4 +1,4 @@
-package employeemanagement;
+package employeemanagement.model;
 
 public class Employee {
 
@@ -8,7 +8,7 @@ public class Employee {
     private  String phone;
     private  double salary;
     private  String position;
-    private  Company company;
+    private Company company;
 
     public Employee(String id, String name, String surname, String phone, double salary, String position, Company company) {
         this.id = id;

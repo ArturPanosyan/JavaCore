@@ -16,7 +16,7 @@ public class Main {
 
     // Press Shift+F9 to start debugging your code. We have set one breakpoint
     // for you, but you can always add more by pressing Ctrl+F8.
-// Создаем объект Scanner для ввода данных с клавиатуры
+    // Создаем объект Scanner для ввода данных с клавиатуры
 
     // Scanner scanner = new Scanner(System.in);
     // Student student = new Student();
