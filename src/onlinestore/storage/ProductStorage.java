@@ -23,18 +23,18 @@ public class ProductStorage {
         }
     }
 
-    public void removeProductById(String productId) {
-        int indexById = getIndexById(productId);
-        if (indexById == -1) {
-            System.out.println("Product does not exists: ");
-            return;
-        }
-        for (int i = indexById + 1; i < size; i++) {
-            products[i - 1] = products[i];
-        }
-        size--;
-    }
-
+   // public void removeProductById(String productId) {
+   //     int indexById = getIndexById(productId);
+   //     if (indexById == -1) {
+   //         System.out.println("Product does not exists: ");
+   //         return;
+   //     }
+   //     for (int i = indexById + 1; i < size; i++) {
+   //         products[i - 1] = products[i];
+   //     }
+   //     size--;
+   // }
+//
     private int getIndexById(String productId) {
         for (int i = 0; i < size; i++) {
             if(products[i].getId().equals(productId)){
@@ -51,4 +51,12 @@ public class ProductStorage {
       products = tmp;
     }
 
+    public Product getById(String productId) {
+        for (int i = 0; i < size; i++) {
+            if(products[i].getId().equals(productId)){
+                return products[i];
+            }
+        }
+        return null;
+    }
 }

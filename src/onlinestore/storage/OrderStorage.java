@@ -2,6 +2,8 @@ package onlinestore.storage;
 
 import onlinestore.order.Order;
 
+import java.util.UUID;
+
 public class OrderStorage {
 
     private Order[] orders = new Order[100];
@@ -23,14 +25,22 @@ public class OrderStorage {
         }
     }
 
-
-    public void changeOrderStatus(String orderStatus){
-        for (int i = 0; i < size; i++) {
-            if(orders[i].getId().equals(orderStatus)){
-                System.out.println(orders[i]);
-            }
-        }
+    public void orderId(String[] args){
+        String uuid = UUID.randomUUID().toString();
+        String[] uuids = uuid.split("-");
+        String id = uuids[0];
+        System.out.println(id);
     }
+
+
+  // public void changeOrderStatus(String orderStatus){
+  //     for (int i = 0; i < size; i++) {
+  //         if(orders[i].getId().equals(orderStatus)){
+  //             System.out.println(orders[i]);
+  //         }
+  //     }
+  // }
+
 
 
     private void extend() {
