@@ -1,19 +1,22 @@
 package onlinestore.user;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
 
     private String id;
     private String name;
     private String email;
     private String password;
+    private UserType userType;
 
-    public User(String id, String name, String email, String password) {
+    public User(String id, String name, String email, String password, UserType userType) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.userType = userType;
     }
 
     public User() {
@@ -35,7 +38,7 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
+    public String getEmail(String username, String s) {
         return email;
     }
 
@@ -51,13 +54,22 @@ public class User {
         this.password = password;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
-        return "Login{" +
+        return "User{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", userType=" + userType +
                 '}';
     }
 
@@ -71,7 +83,8 @@ public class User {
         if (!Objects.equals(id, user.id)) return false;
         if (!Objects.equals(name, user.name)) return false;
         if (!Objects.equals(email, user.email)) return false;
-        return Objects.equals(password, user.password);
+        if (!Objects.equals(password, user.password)) return false;
+        return userType == user.userType;
     }
 
     @Override
@@ -80,6 +93,9 @@ public class User {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (userType != null ? userType.hashCode() : 0);
         return result;
     }
-}
+
+    }
+

@@ -1,244 +1,293 @@
 package employeemanagement;
 
-import employeemanagement.exception.ModelNotFoundException;
+import employeemanagement.exception.EmployeeNotFoundException;
 import employeemanagement.model.Company;
 import employeemanagement.model.Employee;
 import employeemanagement.storage.CompanyStorage;
 import employeemanagement.storage.EmployeeStorage;
+import employeemanagement.util.DateUtil;
+import employeemanagement.util.StorageSerializeUtil;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Scanner;
 
-public class EmployeeManagementMain {
+public class EmployeeManagementMain implements Command {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static EmployeeStorage employeeStorage = new EmployeeStorage();
-    private static CompanyStorage companyStorage = new CompanyStorage();
+    private static EmployeeStorage employeeStorage = StorageSerializeUtil.deserializeEmployeeStorage();
+    private static CompanyStorage companyStorage = StorageSerializeUtil.deserializeCompanyStorage();
 
+    // public static User currentUser = null;
     public static void main(String[] args) {
         boolean isRun = true;
 
         while (isRun) {
-            printCommands();
+            Command.printLoginCommands();
             String command = scanner.nextLine();
             switch (command) {
-                case "0":
+                case EXIT:
                     isRun = false;
                     break;
-                case "1":
+                case LOGIN:
+                    login();
+                    break;
+                case REGISTER:
+                    register();
+                    break;
+                default:
+                    System.out.println("Wrong command!");
+            }
+        }
+
+    }
+
+    private static void register() {
+        //TODO
+    }
+
+    private static void login() {
+        System.out.println("Please input email");
+        String email = scanner.nextLine();
+        System.out.println("Please input password");
+        String password = scanner.nextLine();
+        if (email.equals("admin@mail.com") && password.equals("1234")) {
+            //currentUser =
+            userCommands();
+        } else {
+            System.out.println("Invalid email or password. Please try again.");
+        }
+    }
+
+    private static void userCommands() {
+        boolean isRun = true;
+        while (isRun) {
+            Command.printCommands();
+            String command = scanner.nextLine();
+            switch (command) {
+                case LOGOUT:
+                    isRun = false;
+                    //currentUser = null;
+                    break;
+                case ADD_COMPANY:
                     addCompany();
                     break;
-                case "2":
+                case ADD_EMPLOYEE:
                     addEmployee();
                     break;
-                case "3":
+                case PRINT_COMPANIES:
                     companyStorage.print();
                     break;
-                case "4":
+                case PRINT_EMPLOYEES:
                     employeeStorage.print();
                     break;
-                case "5":
+                case SEARCH_EMPLOYEE_BY_ID:
                     searchEmployeeById();
                     break;
-                case "6":
+                case SEARCH_EMPLOYEE_BY_COMPANY:
                     searchEmployeeByCompany();
                     break;
-                case "7":
+                case DELETE_COMPANY:
                     deleteCompany();
                     break;
-                case "8":
+                case DELETE_EMPLOYEE:
                     deleteEmployee();
                     break;
-                case "9":
+                case CHANGE_COMPANY:
                     changeCompany();
                     break;
-                case "10":
+                case CHANGE_EMPLOYEE:
                     changeEmployee();
                     break;
                 default:
-                    System.out.println("invalid command: Try again!");
-                    break;
+                    System.out.println("Invalid command. Try again!");
             }
-
         }
     }
 
     private static void changeEmployee() {
-        System.out.println("Please choose company ID: ");
+        System.out.println("Please choose company id");
         companyStorage.print();
-        String companyID = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyID);
+        String companyId = scanner.nextLine();
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println(" Company with " + companyID + "does not exists!!! ");
+            System.out.println("company with " + companyId + " does not exists!!!");
             return;
         }
-        employeeStorage.searchEmployessByCompany(companyFromStorage);
-        System.out.println("Please input employee ID: ");
-        String employeeID = scanner.nextLine();
+        employeeStorage.searchEmployeesByCompany(companyFromStorage);
+        System.out.println("please input employee id");
+        String employeeId = scanner.nextLine();
         try {
-            Employee employeeFromStorage = employeeStorage.getByID(employeeID);
-            System.out.println("Please input Employee Name: ");
+            Employee employeeFromStorage = employeeStorage.getById(employeeId);
+            System.out.println("please input employee name");
             String employeeName = scanner.nextLine();
-            System.out.println("Please input Employee Surname: ");
+            System.out.println("please input employee surname");
             String employeeSurname = scanner.nextLine();
-            System.out.println("Please input Employee Phone: ");
+            System.out.println("please input employee phone");
             String employeePhone = scanner.nextLine();
-            System.out.println("Please input Employee Position: ");
+            System.out.println("please input employee position");
             String employeePosition = scanner.nextLine();
-            System.out.println("Please input Employee Salary USD: ");
+            System.out.println("please input employee salary AMD");
             double employeeSalary = Double.parseDouble(scanner.nextLine());
             employeeFromStorage.setName(employeeName);
             employeeFromStorage.setSurname(employeeSurname);
             employeeFromStorage.setPosition(employeePosition);
             employeeFromStorage.setSalary(employeeSalary);
             employeeFromStorage.setPhone(employeePhone);
-            System.out.println("Employee Updated! ");
-        } catch (ModelNotFoundException m) {
-            System.out.println(m.getMessage());
+            System.out.println("Employee updated!");
+
+            StorageSerializeUtil.serializeEmployeeStorage(employeeStorage);
+        } catch (EmployeeNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Wrong salary, please input only numbers!");
         }
+
     }
 
     private static void changeCompany() {
-        System.out.println("Please input Company ID: ");
-        String companyID = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyID);
+        System.out.println("please input company id");
+        String companyId = scanner.nextLine();
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println("Company with " + companyID + "does not exists!!! ");
+            System.out.println("Company with " + companyId + " does not exists!!!");
             return;
         }
-        System.out.println("Please input New Company Name: ");
+        System.out.println("please input new company name");
         String companyName = scanner.nextLine();
-        System.out.println("Please input New Company Address: ");
+        System.out.println("please input new company address");
         String companyAddress = scanner.nextLine();
         companyFromStorage.setName(companyName);
         companyFromStorage.setAddress(companyAddress);
-        System.out.println("Company Updated: ");
+        System.out.println("company updated");
+        StorageSerializeUtil.serializeCompanyStorage(companyStorage);
     }
 
     private static void deleteEmployee() {
-        System.out.println("Please choose Company ID: ");
+        System.out.println("Please choose company id");
         companyStorage.print();
         String companyId = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyId);
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println("Company with " + companyId + " does not exists!!! ");
+            System.out.println("company with " + companyId + " does not exists!!!");
             return;
         }
-        employeeStorage.searchEmployessByCompany(companyFromStorage);
+        employeeStorage.searchEmployeesByCompany(companyFromStorage);
 
-        System.out.println("Please input Employee ID: ");
-        String employeeID = scanner.nextLine();
+        System.out.println("please input employee id");
+        String employeeId = scanner.nextLine();
         try {
-            Employee employeeFromStorage = employeeStorage.getByID(employeeID);
+            Employee employeeFromStorage = employeeStorage.getById(employeeId);
             if (!employeeFromStorage.getCompany().equals(companyFromStorage)) {
-                System.out.println("Wrong employee ID: ");
+                System.out.println("Wrong employee id.");
                 return;
             }
-            employeeStorage.deleteById(employeeID);
-        } catch (ModelNotFoundException m) {
-            System.out.println(m.getMessage());
+            employeeStorage.deleteById(employeeId);
+        } catch (EmployeeNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private static void deleteCompany() {
-        System.out.println("Please choose CompanyID: ");
+        System.out.println("Please choose company id");
         companyStorage.print();
-        String companyID = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyID);
+        String companyId = scanner.nextLine();
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println("Company with " + companyID + " does not exists!!!");
+            System.out.println("company with " + companyId + " does not exists!!!");
             return;
         }
-        companyStorage.deleteById(companyID);
-
+        companyStorage.deleteById(companyId);
+        StorageSerializeUtil.serializeCompanyStorage(companyStorage);
     }
 
     private static void searchEmployeeByCompany() {
-        System.out.println("Please Choose Company ID");
+        System.out.println("Please choose company id");
         companyStorage.print();
         String companyId = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyId);
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println("Company with " + companyId + " does not exists!!!");
+            System.out.println("company with " + companyId + " does not exists!!!");
             return;
         }
-        employeeStorage.searchEmployessByCompany(companyFromStorage);
+        employeeStorage.searchEmployeesByCompany(companyFromStorage);
     }
-
 
     private static void searchEmployeeById() {
-        System.out.println("Please input Employee ID");
+        System.out.println("please input employee id");
         String employeeId = scanner.nextLine();
         try {
-            System.out.println(employeeStorage.getByID(employeeId));
-        } catch (ModelNotFoundException m){
-            System.out.println(m.getMessage());
+            System.out.println(employeeStorage.getById(employeeId));
+        } catch (EmployeeNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
+
     private static void addEmployee() {
-        System.out.println("Please Choose Company ID");
+        System.out.println("Please choose company id");
         companyStorage.print();
         String companyId = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyId);
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage == null) {
-            System.out.println("Company with " + companyId + " does not exists!!!");
+            System.out.println("company with " + companyId + " does not exists!!!");
             return;
         }
-        System.out.println("Please input Employee ID ");
+        System.out.println("please input employee id");
         String employeeId = scanner.nextLine();
         boolean exists;
-        try{
-          employeeStorage.getByID(employeeId);
+        try {
+            employeeStorage.getById(employeeId);
             exists = true;
-        } catch (ModelNotFoundException m){
+        } catch (EmployeeNotFoundException e) {
             exists = false;
         }
-        if(!exists) {
-        System.out.println(" Please input Employee Name: ");
-        String employeeName = scanner.nextLine();
-        System.out.println(" Please input Employee Surname: ");
-        String employeeSurname = scanner.nextLine();
-        System.out.println(" Please input Employee Phone: ");
-        String employeePhone = scanner.nextLine();
-        System.out.println(" Please input Employee Position:");
-        String employeePosition = scanner.nextLine();
-        System.out.println(" Please input Employee Salary USD: ");
-        double employeeSalary = Double.parseDouble(scanner.nextLine());
-        Employee employee = new Employee(employeeId, employeeName, employeeSurname, employeePhone, employeeSalary, employeePosition, companyFromStorage);
-        employeeStorage.add(employee);
-        System.out.println("Employee Registered! ");
-    }
+        if (!exists) {
+            System.out.println("please input employee name");
+            String employeeName = scanner.nextLine();
+            System.out.println("please input employee surname");
+            String employeeSurname = scanner.nextLine();
+            System.out.println("please input employee phone");
+            String employeePhone = scanner.nextLine();
+            System.out.println("please input employee position");
+            String employeePosition = scanner.nextLine();
+            System.out.println("please input employee salary AMD");
+            double employeeSalary = Double.parseDouble(scanner.nextLine());
+            System.out.println("please input employee date of birthday (dd-MM-yyyy)");
+            String dateOfBirthdayStr = scanner.nextLine();
+            Date dateOfBirthday = null;
+            try {
+                dateOfBirthday = DateUtil.stringToDate(dateOfBirthdayStr);
+            } catch (ParseException ex) {
+                System.out.println("dateOfBirthday is incorrect!");
+            }
+            Date registerDate = new Date();
+            Employee employee = new Employee(employeeId, employeeName, employeeSurname,
+                    employeePhone, employeeSalary, employeePosition,
+                    companyFromStorage, dateOfBirthday, registerDate);
+            // employee.setUser(currentUser);
+            employeeStorage.add(employee);
+            System.out.println("Employee registered!");
+        } else {
+            System.out.println("Employee already exists!");
         }
+    }
+
 
     private static void addCompany() {
-        System.out.println("Plese input Company ID");
+        System.out.println("please input company id");
         String companyId = scanner.nextLine();
-        Company companyFromStorage = companyStorage.getBYId(companyId);
+        Company companyFromStorage = companyStorage.getById(companyId);
         if (companyFromStorage != null) {
-            System.out.println("Company with " + companyId + " alredy exists!!!");
+            System.out.println("Company with " + companyId + " already exists!!!");
             return;
         }
-        System.out.println("Please input Company Name ");
+
+        System.out.println("please input company name");
         String companyName = scanner.nextLine();
-        System.out.println("Please input Company Address");
+        System.out.println("please input company address");
         String companyAddress = scanner.nextLine();
         Company company = new Company(companyId, companyName, companyAddress);
         companyStorage.add(company);
-        System.out.println("Company Registered.! ");
+        System.out.println("company registered.");
     }
-
-    private static void printCommands() {
-        System.out.println("Please input 0 for Exit");
-        System.out.println("Please input 1 for ADD_COMPANY");
-        System.out.println("Please input 2 for ADD_EMPLOYEE");
-        System.out.println("Please input 3 for PRINT_ALL_COMPANIES");
-        System.out.println("Please input 4 for PRINT_ALL_EMPLOYEES");
-        System.out.println("Please input 5 for SEARCH_EMPLOYEE_BY_ID");
-        System.out.println("Please input 6 for SEARCH_EMPLOYEE_BY_COMPANY");
-        System.out.println("Please input 7 for DELETE_COMPANY");
-        System.out.println("Please input 8 for DELETE_EMPLOYEE");
-        System.out.println("Please input 9 for CHANGE_COMPANY");
-        System.out.println("Please input 10 for CHANGE_EMPLOYEE");
-    }
-
-
 }

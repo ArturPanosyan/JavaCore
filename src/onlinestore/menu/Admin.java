@@ -2,11 +2,17 @@ package onlinestore.menu;
 
 public interface Admin {
 
-  //  String LOGIN = "0";
-  //  String REGISTER = "1";
-  //  String LOGOUT = "2";
+    String LOGIN = "0";
+    String REGISTER = "1";
+    String LOGOUT = "2";
 
-    String LOGOUT = "0";
+    static void printCommands() {
+        System.out.println("Please input " + LOGIN + " for LOGIN: ");
+        System.out.println("Please input " + REGISTER + " for REGISTER: ");
+        System.out.println("Please input " + LOGOUT + " for LOGOUT: ");
+    }
+
+    String LOG_OUT = "0";
     String ADD_PRODUCT = "1";
     String REMOVE_PRODUCT_BY_ID = "2";
     String PRINT_PRODUCTS = "3";
@@ -22,13 +28,8 @@ public interface Admin {
     String CANCEL_ORDER_BY_ID = "4";
 
 
-  // static void printMenuCommands() {
-  //     System.out.println("Please input " + LOGIN + " for LOGIN: ");
-  //     System.out.println("Please input " + REGISTER + " for REGISTER: ");
-  //     System.out.println("Please input " + LOGOUT + " for LOGOUT: ");
-  // }
 
-    static  void printCommands(){
+    static  void printAdminCommands(){
         System.out.println("Please input " + LOGOUT + " for LOGOUT: ");
         System.out.println("Please input " + ADD_PRODUCT + " for ADD_PRODUCT: ");
         System.out.println("Please input " + REMOVE_PRODUCT_BY_ID + " for REMOVE_PRODUCT_BY_ID: ");

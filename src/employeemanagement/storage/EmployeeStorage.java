@@ -1,72 +1,73 @@
 package employeemanagement.storage;
 
-import employeemanagement.exception.ModelNotFoundException;
+import employeemanagement.exception.EmployeeNotFoundException;
 import employeemanagement.model.Company;
 import employeemanagement.model.Employee;
+import employeemanagement.util.StorageSerializeUtil;
 
-public class EmployeeStorage {
-    
-    private  Employee[] employees = new Employee[10];
-    private  int size;
-    
-    public  void add(Employee employee){
-        if(size == employees.length){
+import java.io.Serializable;
+
+public class EmployeeStorage implements Serializable {
+
+    private Employee[] employees = new Employee[10];
+    private int size;
+
+    public void add(Employee employee) {
+        if (size == employees.length) {
             extend();
         }
         employees[size++] = employee;
+        StorageSerializeUtil.serializeEmployeeStorage(this);
     }
 
-    public  void print(){
+    public void print() {
         for (int i = 0; i < size; i++) {
             System.out.println(employees[i]);
         }
     }
-    
-    
+
     private void extend() {
         Employee[] tmp = new Employee[employees.length + 10];
         System.arraycopy(employees, 0, tmp, 0, employees.length);
         employees = tmp;
     }
 
-
-    public Employee getByID(String employeeId) throws ModelNotFoundException {
+    public Employee getById(String employeeId) throws EmployeeNotFoundException {
         for (int i = 0; i < size; i++) {
-            if(employees[i].getId().equals(employeeId)){
-                return  employees[i];
+            if (employees[i].getId().equals(employeeId)) {
+                return employees[i];
             }
         }
-       throw new ModelNotFoundException ("Employe with " + employeeId + " does not exists!!!");
-
+        throw new EmployeeNotFoundException("Employee with " + employeeId + " does not exists!");
     }
 
-    public void searchEmployessByCompany(Company companyFromStorage) {
+    public void searchEmployeesByCompany(Company companyFromStorage) {
         for (int i = 0; i < size; i++) {
-            if(employees[i].getCompany().equals(companyFromStorage));
-            System.out.println(employees[i]);
+            if (employees[i].getCompany().equals(companyFromStorage)) {
+                System.out.println(employees[i]);
+            }
         }
     }
 
-
-    public void deleteById(String companyID) {
-        int indexById = getindexBYId(companyID);
-        if(indexById == -1) {
-            System.out.println(" Employee does not exists!!! ");
+    public void deleteById(String companyId) {
+        int indexById = getIndexById(companyId);
+        if (indexById == -1) {
+            System.out.println("Employee does not exists!");
             return;
         }
         for (int i = indexById + 1; i < size; i++) {
             employees[i - 1] = employees[i];
         }
         size--;
+        StorageSerializeUtil.serializeEmployeeStorage(this);
     }
 
-    private int getindexBYId(String companyID) {
+    private int getIndexById(String companyId) {
         for (int i = 0; i < size; i++) {
-            if(employees[i].getId().equals(companyID)){
-                return  i;
+            if (employees[i].getId().equals(companyId)) {
+                return i;
             }
         }
-        return  - 1;
+        return -1;
     }
-    }
-
+}

@@ -1,25 +1,28 @@
 package employeemanagement.storage;
 
 import employeemanagement.model.Company;
+import employeemanagement.util.StorageSerializeUtil;
 
-public class CompanyStorage {
+import java.io.Serializable;
 
-    private  Company[] companies = new Company[10];
-    private  int size;
+public class CompanyStorage implements Serializable {
 
-    public  void add(Company company){
-        if(size == companies.length){
+    private Company[] companies = new Company[10];
+    private int size;
+
+    public void add(Company company) {
+        if (size == companies.length) {
             extend();
         }
         companies[size++] = company;
+        StorageSerializeUtil.serializeCompanyStorage(this);
     }
 
-    public  void print(){
+    public void print() {
         for (int i = 0; i < size; i++) {
             System.out.println(companies[i]);
         }
     }
-
 
     private void extend() {
         Company[] tmp = new Company[companies.length + 10];
@@ -27,36 +30,34 @@ public class CompanyStorage {
         companies = tmp;
     }
 
-
-    public Company getBYId(String companyId) {
+    public Company getById(String companyId) {
         for (int i = 0; i < size; i++) {
-            if(companies[i].getId().equals(companyId)){
+            if (companies[i].getId().equals(companyId)) {
                 return companies[i];
             }
         }
-        return  null;
+        return null;
     }
 
-    public void deleteById(String companyID) {
-        int indexById = getindexBYId(companyID);
-        if( indexById == -1) {
-            System.out.println(" Company does not exists!!! ");
+    public void deleteById(String companyId) {
+        int indexById = getIndexById(companyId);
+        if (indexById == -1) {
+            System.out.println("Company does not exists!");
             return;
         }
         for (int i = indexById + 1; i < size; i++) {
             companies[i - 1] = companies[i];
         }
-    size--;
+        size--;
+        StorageSerializeUtil.serializeCompanyStorage(this);
     }
 
-    private int getindexBYId(String companyID) {
+    private int getIndexById(String companyId) {
         for (int i = 0; i < size; i++) {
-            if(companies[i].getId().equals(companyID)){
-                return  i;
+            if (companies[i].getId().equals(companyId)) {
+                return i;
             }
         }
-   return  - 1;
+        return -1;
     }
-
-
 }

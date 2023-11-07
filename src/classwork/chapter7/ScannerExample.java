@@ -11,7 +11,7 @@ public class ScannerExample {
         System.out.println("Please input numbers dividet ,");
         String numbersStr = scanner.nextLine();
         String[] numbersStrArray = numbersStr.split(",");
-        int [] numbers = new int[numbersStrArray.length];
+        int[] numbers = new int[numbersStrArray.length];
         int index = 0;
         for (String numberStr : numbersStrArray) {
             numbers[index++] = Integer.parseInt(numberStr);
@@ -19,6 +19,25 @@ public class ScannerExample {
         int max = ArrayUtil.max(numbers);
         System.out.println("Max: " + max);
 
+//        System.out.println("please input a");
+//        int a = Integer.parseInt(scanner.nextLine());
+//        System.out.println("please input b");
+//        int b = Integer.parseInt(scanner.nextLine());
+//        System.out.println("Please input + or -");
+//        String op = scanner.nextLine();
+//        if (op.equals("+")) {
+//            System.out.println(a + b);
+//        } else if (op.equals("-")) {
+//            System.out.println(a - b);
+//        } else {
+//            System.out.println("unsupported");
+//        }
+
+//        System.out.println("Please input full name");
+//        String fullName = scanner.nextLine();
+//        String[] fullNameArray = fullName.split(" ");
+//        System.out.println(fullNameArray[0]);
+//        System.out.println(fullNameArray[1]);
 
     }
 }

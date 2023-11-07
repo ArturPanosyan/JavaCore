@@ -44,6 +44,7 @@ public class MedicialCenterMenu implements Commands {
                     addPatient();
                     break;
                 case PRINT_ALL_PATIENTS_BY_DOCTOR:
+                    printAllPatientsByDoctor();
                     break;
                 case PRINT_TODAYS_PATIENTS:
                     personStorage.printTodaysPatients();
