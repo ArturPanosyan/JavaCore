@@ -1,4 +1,6 @@
-package onlinestore.user;
+package onlinestore.model;
+
+import onlinestore.model.enums.UserType;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -38,7 +40,7 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getEmail(String username, String s) {
+    public String getEmail() {
         return email;
     }
 
@@ -60,17 +62,6 @@ public class User implements Serializable {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", userType=" + userType +
-                '}';
     }
 
     @Override
@@ -97,5 +88,16 @@ public class User implements Serializable {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='******'" +
+                ", userType=" + userType +
+                '}';
     }
+}
+
 

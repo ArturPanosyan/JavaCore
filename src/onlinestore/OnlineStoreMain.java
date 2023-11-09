@@ -1,280 +1,254 @@
 package onlinestore;
-
-import onlinestore.exception.OutOfStockException;
-import onlinestore.menu.Admin;
-import onlinestore.menu.Menu;
-import onlinestore.order.Order;
-import onlinestore.order.OrderStatus;
-import onlinestore.order.PaymentMethod;
-import onlinestore.product.Product;
-import onlinestore.product.ProductType;
+import onlinestore.command.Commands;
+import onlinestore.model.Order;
+import onlinestore.model.Product;
+import onlinestore.model.User;
+import onlinestore.model.enums.OrderStatus;
+import onlinestore.model.enums.PaymentMethod;
+import onlinestore.model.enums.ProductType;
+import onlinestore.model.enums.UserType;
 import onlinestore.storage.OrderStorage;
 import onlinestore.storage.ProductStorage;
 import onlinestore.storage.UserStorage;
-import onlinestore.user.User;
-import onlinestore.user.UserType;
-import onlinestore.util.CheckingUtil;
 import onlinestore.util.DateUtil;
+import onlinestore.util.IdGenerator;
 import onlinestore.util.StorageSerializeUtil;
-
 import java.util.Date;
 import java.util.Scanner;
 
+public class OnlineStoreMain implements Commands {
 
-public class OnlineStoreMain implements Admin, Menu {
-
-    private static Scanner scanner = new Scanner(System.in);
-    private static OrderStorage orderStorage = StorageSerializeUtil.deserializeOrderStorage();
-    private static ProductStorage productStorage = StorageSerializeUtil.deserializeProductStorage();
-    private static UserStorage userStorage = StorageSerializeUtil.deserializeUserStorage();
-    private static ProductType productType;
-    private static UserType userType;
-    private static OrderStatus orderStatus;
-    private static PaymentMethod paymentMethod;
-    private static User currentUser;
-    private static CheckingUtil checkingUtil = new CheckingUtil();
+    private final static Scanner SCANNER = new Scanner(System.in);
+    private final static OrderStorage ORDER_STORAGE = StorageSerializeUtil.deserializeOrderStorage();
+    private final static ProductStorage PRODUCT_STORAGE = StorageSerializeUtil.deserializeProductStorage();
+    private final static UserStorage USER_STORAGE = StorageSerializeUtil.deserializeUserStorage();
+    private static User currentUser = null;
 
     public static void main(String[] args) {
-        boolean run = true;
-        while (run) {
-            Admin.printCommands();
-            String command = scanner.nextLine();
+        boolean isRun = true;
+        while (isRun) {
+            Commands.printMainCommands();
+            String command = SCANNER.nextLine();
             switch (command) {
+                case EXIT:
+                    isRun = false;
+                    break;
                 case LOGIN:
                     login();
                     break;
                 case REGISTER:
                     register();
                     break;
+                default:
+                    System.out.println("Unknown Command!");
             }
+        }
+    }
+
+    private static void register() {
+        System.out.println("Please input name,email,password,userType(ADMIN,USER)");
+        String userDataStr = SCANNER.nextLine();
+        String[] userDataArr = userDataStr.split(",");
+        User user = USER_STORAGE.getByEmail(userDataArr[1]);
+        if (user != null) {
+            System.out.println("User already exists!");
+            return;
+        }
+        try {
+            user = new User(IdGenerator.generateId(), userDataArr[0], userDataArr[1], userDataArr[2], UserType.valueOf(userDataArr[3].toUpperCase()));
+            USER_STORAGE.add(user);
+            System.out.println("User registered!");
+        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid data or user type!");
         }
     }
 
     private static void login() {
-        System.out.println("input your email");
-        String email = scanner.nextLine();
-        System.out.println("password");
-        String password = scanner.nextLine();
-        User user = new User();
-        if (CheckingUtil.checkPassword(user, password)) {
-            currentUser = user;
-            if (user.getUserType() == UserType.ADMIN) {
-                adminCommands();
-            } else if (user.getUserType() == UserType.USER) {
-                userCommands();
-            }
-        } else {
-            System.out.println("Data isn't correct, please login again: ");
+        System.out.println("Please input email,password");
+        String loginDataStr = SCANNER.nextLine();
+        String[] loginDataArr = loginDataStr.split(",");
+        User user = USER_STORAGE.getByEmail(loginDataArr[0]);
+        if (user == null || !user.getPassword().equals(loginDataArr[1])) {
+            System.out.println("email or password is incorrect!");
             return;
         }
-        System.out.println("Everything is correct, you can enter your profile: ");
+        currentUser = user;
+        if (user.getUserType() == UserType.ADMIN) {
+            adminCommands();
+        } else if (user.getUserType() == UserType.USER) {
+            userCommands();
+        }
+
     }
 
 
-    private static void register() {
-        System.out.println("Please input your id:");
-        String id = scanner.nextLine();
-        System.out.println("please input your name");
-        String name = scanner.nextLine();
-        System.out.println("please input your email");
-        String email = scanner.nextLine();
-        String password = null;
-        System.out.println("please input your password");
-        password = scanner.nextLine();
-        if (userStorage.getById(email) != null || !CheckingUtil.checkEmail(email) || password.isEmpty()) {
-            System.out.println("this data is incorrect, try again ");
+    private static void changeOrderStatusById() {
+        ORDER_STORAGE.print();
+        System.out.println("Please input order id,new status(NEW,DELIVERED,CANCELED)");
+        String orderDataStr = SCANNER.nextLine();
+        String[] orderDataArr = orderDataStr.split(",");
+        Order order = ORDER_STORAGE.getById(orderDataArr[0]);
+        if (order == null) {
+            System.out.println("Order does not exists");
             return;
         }
-        userStorage.add(new User(id, name, email, password, UserType.USER));
-        login();
+        OrderStatus newStatus = OrderStatus.valueOf(orderDataArr[1]);
+        if (order.getOrderStatus() == OrderStatus.NEW && newStatus == OrderStatus.DELIVERED) {
+            if (order.getProduct().getStockQty() < order.getQty()) {
+                System.out.println("You do not have enough product qty");
+                return;
+            }
+            order.getProduct().setStockQty(order.getProduct().getStockQty() - order.getQty());
+            order.setOrderStatus(newStatus);
+            System.out.println("Order status has changed!");
+            StorageSerializeUtil.serializeOrderStorage(ORDER_STORAGE);
+        }
+    }
+
+    private static void removeProductById() {
+        PRODUCT_STORAGE.print();
+        System.out.println("Please input product id");
+        String productId = SCANNER.nextLine();
+        Product product = PRODUCT_STORAGE.getById(productId);
+        if (product == null) {
+            System.out.println("Wrong product Id");
+            return;
+        }
+        product.setRemoved(true);
+        StorageSerializeUtil.serializeProductStorage(PRODUCT_STORAGE);
+    }
+
+    private static void addProduct() {
+        System.out.println("Please input name,description,stockQty,price,productType(ELECTRONICS,CLOTHING,BOOKS)");
+        String productDataStr = SCANNER.nextLine();
+        String[] productDataArr = productDataStr.split(",");
+
+        try {
+            Product product = new Product();
+            product.setId(IdGenerator.generateId());
+            product.setName(productDataArr[0]);
+            product.setDescription(productDataArr[1]);
+            product.setStockQty(Integer.parseInt(productDataArr[2]));
+            product.setPrice(Double.parseDouble(productDataArr[3]));
+            product.setProductType(ProductType.valueOf(productDataArr[4]));
+            PRODUCT_STORAGE.add(product);
+            System.out.println("Product added!");
+        } catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid data: " + e.getMessage());
+        }
     }
 
     private static void adminCommands() {
-        boolean run = true;
-        while (run) {
-            System.out.println("------------------------------------------------------------------------------------------------");
-            System.out.println("'your profile' -> " + currentUser.getName() + " | your Type{" + currentUser.getUserType() + "}" + " | user id " + currentUser.getId());
-            Admin.printCommands();
-            String command = scanner.nextLine();
+        boolean isRun = true;
+        while (isRun) {
+            Commands.printAdminCommands();
+            String command = SCANNER.nextLine();
             switch (command) {
-                case LOG_OUT:
-                    run = false;
+                case LOGOUT:
+                    isRun = false;
+                    currentUser = null;
                     break;
-            //case PRINT_ALL_PRODUCTS:
-            //    printAllProducts();
-            //    break;
-            //case ADD_PRODUCT:
-            //    addProduct();
-            //    break;
-                case PRINT_USERS:
-                    printUsers();
+                case ADD_PRODUCT:
+                    addProduct();
                     break;
                 case REMOVE_PRODUCT_BY_ID:
                     removeProductById();
                     break;
+                case PRINT_PRODUCTS:
+                    PRODUCT_STORAGE.print();
+                    break;
+                case PRINT_USERS:
+                    USER_STORAGE.printByType(UserType.USER);
+                    break;
                 case PRINT_ORDERS:
-                    orderStorage.print();
+                    ORDER_STORAGE.print();
                     break;
-                case CHANGE_ORDER_STATUS:
-                    changeOrderStatus();
+                case CHANGE_ORDER_STATUS_BY_ID:
+                    changeOrderStatusById();
                     break;
+                default:
+                    System.out.println("Unknown command!");
             }
         }
-
     }
-
-    private static void printAllProducts() {
-    }
-
-    private static void removeProductById() {
-    }
-
-    private static void printUsers() {
-    }
-
-    private static void changeOrderStatus() {
-
-    }
-
-    private static void changeUserRole() {
-        System.out.println("input User id for change");
-        String id = scanner.nextLine();
-        User userById = (User) userStorage.getById(id);
-        if (userById == null) {
-            System.out.println("that user with " + id + " " + " doesn't exist");
-            return;
-        }
-        userStorage.changeUserTypeById(userById);
-        System.out.println("that user Role already ADMIN");
-    }
-
-    private static void addProduct() {
-        System.out.println("add id of the product");
-        String id = scanner.nextLine();
-        System.out.println("add name of the product");
-        String name = scanner.nextLine();
-        System.out.println("add description of the product");
-        String description = scanner.nextLine();
-        System.out.println("add price of the product");
-        String priceWithStr = scanner.nextLine();
-        System.out.println("add count of the product in stock");
-        String stockQtyWithStr = scanner.nextLine();
-        ProductType[] productTypes = ProductType.values();
-        for (ProductType type : productTypes) {
-            System.out.println();
-            System.out.print(productType.ordinal() + ") " + productType + " ");
-        }
-        System.out.println();
-        System.out.println("add Product Types:");
-        String selectedCategory = scanner.nextLine();
-        if (!CheckingUtil.isDigit(priceWithStr) || !CheckingUtil.isDigit(stockQtyWithStr) || !CheckingUtil.isDigit(selectedCategory)) {
-            System.err.println("that fields (stock, price and category) " + " must be only digit");
-            return;
-        }
-        double price = Double.parseDouble(priceWithStr);
-        int stockQty = Integer.parseInt(stockQtyWithStr);
-        if (Integer.parseInt(selectedCategory) >= productType.ordinal() && Integer.parseInt(selectedCategory) < 0) {
-            System.err.println("please select correct category, that category doesn't exist");
-        } else {
-            productStorage.add(new Product(id, name, description, price, stockQty, productType));
-            StorageSerializeUtil.serializeProductStorage(productStorage);
-        }
-    }
-
 
     private static void userCommands() {
-        boolean run = true;
-        while (run) {
-            Object user = orderStorage.statusDelivered(scanner.nextLine());
-            System.out.println("------------------------------------------------------------------------------------------------");
-            System.out.println("'your profile' -> " + currentUser.getName() + " | your UserType {" + currentUser.getUserType() + "}" + " | user id " + currentUser.getId());
-            Admin.printLoginCommands();
-            String command = scanner.nextLine();
+        boolean isRun = true;
+        while (isRun) {
+            Commands.printUserCommands();
+            String command = SCANNER.nextLine();
             switch (command) {
-                case Admin.LOGOUT:
-                    run = false;
+                case LOGOUT:
+                    isRun = false;
+                    currentUser = null;
                     break;
                 case PRINT_ALL_PRODUCTS:
-                    productStorage.print();
+                    PRODUCT_STORAGE.print();
                     break;
-              //case BUY_PRODUCT:
-              //    CheckForBuy();
-              //    break;
-              //case PRINT_MY_ORDERS:
-              //   // printCurrentOrders();
-                 //   break;
+                case BUY_PRODUCT:
+                    buyProduct();
+                    break;
+                case PRINT_MY_ORDERS:
+                    ORDER_STORAGE.printByUser(currentUser);
+                    break;
                 case CANCEL_ORDER_BY_ID:
-                    System.out.println("input id for cancel");
                     cancelOrderById();
                     break;
+                default:
+                    System.out.println("Unknown Command!");
             }
         }
+    }
 
+    private static void buyProduct() {
+        PRODUCT_STORAGE.print();
+        System.out.println("Please input productId,qty,paymentMethod(CARD,CASH,PAYPAL)");
+        String orderDataStr = SCANNER.nextLine();
+        String[] orderDataArr = orderDataStr.split(",");
+        Product product = PRODUCT_STORAGE.getById(orderDataArr[0]);
+        PaymentMethod paymentMethod = PaymentMethod.valueOf(orderDataArr[2]);
+        if (product == null) {
+            System.out.println("Wrong product Id");
+            return;
+        }
+        int qty = Integer.parseInt(orderDataArr[1]);
 
+        if (product.getStockQty() < qty) {
+            System.out.println("Wrong qty");
+            return;
+        }
+        double price = qty * product.getPrice();
+
+        System.out.println("You want to buy " + product.getName() + " qty: " + qty + " price: " + price + " paymentMethod: " + paymentMethod + " \n Are you sure? (Yes/No)");
+        String answer = SCANNER.nextLine();
+
+        if (!answer.equalsIgnoreCase("yes")) {
+            System.out.println("Order canceled!");
+            return;
+        }
+        Order order = new Order(IdGenerator.generateId(), currentUser, product, qty, new Date(), price, OrderStatus.NEW, paymentMethod);
+        ORDER_STORAGE.add(order);
     }
 
     private static void cancelOrderById() {
-       // printCurrentOrders();
-        System.out.println("Please input Order Id");
-        String orderId = scanner.nextLine();
-        if (orderId != null) {
-            cancelOrderById();
-        } else {
-            System.out.println("Order Id " + orderId + " does not exists!!!");
-        }
-    }
-
-
-    private static void printCurrentOrders(String userId) {
-
-    }
-
-
-    private static void CheckForBuy() {
-        productStorage.print();
-        System.out.println("please write id of the product");
-        String productId = scanner.nextLine();
-        Product product = (Product) productStorage.getProductById(productId);
-        if (product == null) {
-            System.err.println("product " + productId + " " + " doesn't exist");
+        ORDER_STORAGE.printByUser(currentUser);
+        System.out.println("Please input order Id");
+        String orderId = SCANNER.nextLine();
+        Order order = ORDER_STORAGE.getById(orderId);
+        if (order == null || !order.getUser().equals(currentUser)) {
+            System.out.println("Wrong order id");
             return;
         }
-        System.out.println("how many products would you like");
-        String countWithStr = scanner.nextLine();
-        if (!CheckingUtil.isDigit(countWithStr)) {
-            System.err.println("price can't be String -> " + countWithStr);
+        if (order.getOrderStatus() != OrderStatus.NEW) {
+            System.out.println("Order can not be canceled!");
             return;
         }
-        double totalPayment = 0.0;
-        totalPayment = productStorage.costOfTheProduct();
-        buyProduct(product, totalPayment, Integer.parseInt(countWithStr));
+        order.setOrderStatus(OrderStatus.CANCELED);
+        System.out.println("Order canceled!");
+        StorageSerializeUtil.serializeOrderStorage(ORDER_STORAGE);
     }
-
-
-    private static void buyProduct(Product product, double totalPayment, int count) {
-        PaymentMethod[] paymentMethods = PaymentMethod.values();
-        for (PaymentMethod value : paymentMethods) {
-            System.out.print(value.ordinal() + ") " + value + " ");
-        }
-        System.out.println("select your payment methods");
-        String payMeth = scanner.nextLine();
-        if (!CheckingUtil.isDigit(payMeth) || paymentMethods.length <= Integer.parseInt(payMeth)) {
-            System.err.println("this payment method doesn't exist");
-            userCommands();
-        }
-        System.out.println("will you want to buy this product this count " + count + " total cost is " + totalPayment +
-                " if you want to buy. write - [yes} if you won't to buy, write- {any word}");
-        String question = scanner.nextLine();
-        if (question.equals("yes")) {
-            //orderStorage.add(new Order(currentUser, product, new Date(), totalPayment, OrderStatus.NEW, count, paymentMethods.length[Integer.parseInt(payMeth)]));
-            System.out.println("order already registered");
-        } else {
-            userCommands();
-        }
-    }
-
-
 }
+
 
 
 

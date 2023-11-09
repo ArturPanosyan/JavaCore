@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public class StorageSerializeUtil {
 
-    private static final String ORDER_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\storage\\OrderStorage.java";
-    private static final String PRODUCT_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\storage\\ProductStorage.java";
-    private static final String USER_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\storage\\UserStorage.java";
+    private static final String ORDER_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\data\\OrderStorage.dat";
+    private static final String PRODUCT_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\data\\ProductStorage.dat";
+    private static final String USER_FILE_PATH = "C:\\Users\\artur\\JavaCore\\JavaCore\\src\\onlinestore\\data\\UserStorage.dat";
 
     public static void serializeOrderStorage(OrderStorage orderStorage) {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(ORDER_FILE_PATH))) {

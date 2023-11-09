@@ -1,13 +1,8 @@
-package onlinestore.product;
+package onlinestore.model.enums;
 
 public enum ProductType {
 
     ELECTRONICS, CLOTHING, BOOKS;
-
-
-
-    ProductType() {
-    }
 
 
 }
