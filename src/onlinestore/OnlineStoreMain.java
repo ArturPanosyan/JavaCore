@@ -189,7 +189,7 @@ public class OnlineStoreMain implements Commands {
                     buyProduct();
                     break;
                 case PRINT_MY_ORDERS:
-                    ORDER_STORAGE.printByUser(currentUser);
+                  //  ORDER_STORAGE.printByUser(currentUser);
                     break;
                 case CANCEL_ORDER_BY_ID:
                     cancelOrderById();
@@ -231,7 +231,7 @@ public class OnlineStoreMain implements Commands {
     }
 
     private static void cancelOrderById() {
-        ORDER_STORAGE.printByUser(currentUser);
+        //ORDER_STORAGE.printByUser(currentUser);
         System.out.println("Please input order Id");
         String orderId = SCANNER.nextLine();
         Order order = ORDER_STORAGE.getById(orderId);
