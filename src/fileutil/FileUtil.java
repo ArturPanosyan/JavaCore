@@ -19,7 +19,7 @@ public class FileUtil {
     // 2 - fileName - ֆայլի անունը, որը փնտրում ենք։
     //Որպես արդյունք պտի ծրագիրը տպի true եթե կա էդ ֆայլը էդ պապկի մեջ, false եթե չկա։
     static boolean fileSearch(String path, String fileName) {
-        File  file = new File(path);
+        File file = new File(path);
         File[] files = file.listFiles();
 
         if (files != null) {
@@ -114,10 +114,11 @@ public class FileUtil {
             bufferedWriter.write(content);
             bufferedWriter.newLine();
             BufferedReader bufferedReader = new BufferedReader(new FileReader("FileImput"));
-             bufferedReader.readLine();
+            bufferedReader.readLine();
             System.out.println("File created successfully: ");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-    }}
+    }
+}
