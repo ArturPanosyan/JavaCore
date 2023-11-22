@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserStorage implements Serializable {
-    Map <String, User> users = new HashMap();
+    Map <String, User> users = new HashMap<>();
 
     public void add(User user) {
         users.put(user.getEmail(), user);

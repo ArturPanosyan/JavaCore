@@ -13,6 +13,8 @@ import onlinestore.storage.UserStorage;
 import onlinestore.util.DateUtil;
 import onlinestore.util.IdGenerator;
 import onlinestore.util.StorageSerializeUtil;
+
+import java.io.File;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -22,6 +24,7 @@ public class OnlineStoreMain implements Commands {
     private final static OrderStorage ORDER_STORAGE = StorageSerializeUtil.deserializeOrderStorage();
     private final static ProductStorage PRODUCT_STORAGE = StorageSerializeUtil.deserializeProductStorage();
     private final static UserStorage USER_STORAGE = StorageSerializeUtil.deserializeUserStorage();
+
     private static User currentUser = null;
 
     public static void main(String[] args) {
@@ -93,7 +96,8 @@ public class OnlineStoreMain implements Commands {
             return;
         }
         OrderStatus newStatus = OrderStatus.valueOf(orderDataArr[1]);
-        if (order.getOrderStatus() == OrderStatus.NEW && newStatus == OrderStatus.DELIVERED) {
+        if (order.getOrderStatus() == OrderStatus.NEW
+                && newStatus == OrderStatus.DELIVERED) {
             if (order.getProduct().getStockQty() < order.getQty()) {
                 System.out.println("You do not have enough product qty");
                 return;
@@ -168,6 +172,7 @@ public class OnlineStoreMain implements Commands {
                     break;
                 default:
                     System.out.println("Unknown command!");
+
             }
         }
     }
@@ -189,7 +194,7 @@ public class OnlineStoreMain implements Commands {
                     buyProduct();
                     break;
                 case PRINT_MY_ORDERS:
-                  //  ORDER_STORAGE.printByUser(currentUser);
+                    ORDER_STORAGE.printByUser(currentUser);
                     break;
                 case CANCEL_ORDER_BY_ID:
                     cancelOrderById();
@@ -226,12 +231,13 @@ public class OnlineStoreMain implements Commands {
             System.out.println("Order canceled!");
             return;
         }
-        Order order = new Order(IdGenerator.generateId(), currentUser, product, qty, new Date(), price, OrderStatus.NEW, paymentMethod);
+        Order order = new Order(IdGenerator.generateId(),
+                currentUser, product, qty, new Date(), price, OrderStatus.NEW, paymentMethod);
         ORDER_STORAGE.add(order);
     }
 
     private static void cancelOrderById() {
-        //ORDER_STORAGE.printByUser(currentUser);
+        ORDER_STORAGE.printByUser(currentUser);
         System.out.println("Please input order Id");
         String orderId = SCANNER.nextLine();
         Order order = ORDER_STORAGE.getById(orderId);
@@ -247,8 +253,8 @@ public class OnlineStoreMain implements Commands {
         System.out.println("Order canceled!");
         StorageSerializeUtil.serializeOrderStorage(ORDER_STORAGE);
     }
-}
 
+}
 
 
 
