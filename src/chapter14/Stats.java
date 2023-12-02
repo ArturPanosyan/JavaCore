@@ -17,4 +17,11 @@ public class Stats <T> {
         }
         return sum / nums.length;
     }
+    // метасимвола подстановки
+    boolean samAvg(Stats<?> ob) {
+        if (average() == ob.average())
+            return true;
+
+        return false;
+    }
 }
